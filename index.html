@@ -1,74 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Negative Gearing Calculator - Australia</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Negative Gearing Calculator (Australia 2024–25)</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", sans-serif;
+      background: #f7f9fc;
+      margin: 0;
       padding: 20px;
-      background-color: #f2f2f2;
     }
-
-    h1 {
-      color: #004080;
-    }
-
     .container {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
       max-width: 600px;
       margin: auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
-
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
     }
-
     input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 5px;
+      box-sizing: border-box;
     }
-
     button {
       margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #004080;
+      width: 100%;
+      padding: 12px;
+      background-color: #0077cc;
       color: white;
+      font-weight: bold;
       border: none;
       cursor: pointer;
+      border-radius: 5px;
     }
-
+    button:hover {
+      background-color: #005fa3;
+    }
     #result {
       margin-top: 20px;
-      padding: 10px;
+      padding: 15px;
       background-color: #e0f7fa;
       border-left: 5px solid #00796b;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Negative Gearing Calculator</h1>
-    
-    <label for="rentalIncome">Annual Rental Income ($):</label>
-    <input type="number" id="rentalIncome">
 
-    <label for="interestExpenses">Annual Interest Expenses ($):</label>
-    <input type="number" id="interestExpenses">
+    <label>Annual Rental Income ($):</label>
+    <input type="number" id="rentalIncome" min="0" placeholder="e.g. 25000" />
 
-    <label for="otherExpenses">Other Annual Property Expenses ($):</label>
-    <input type="number" id="otherExpenses">
+    <label>Annual Interest Expenses ($):</label>
+    <input type="number" id="interestExpenses" min="0" placeholder="e.g. 20000" />
 
-    <label for="propertyDepreciation">Annual Property Depreciation ($):</label>
-    <input type="number" id="propertyDepreciation">
+    <label>Other Annual Property Expenses ($):</label>
+    <input type="number" id="otherExpenses" min="0" placeholder="e.g. 5000" />
 
-    <label for="marginalTaxRate">Your Marginal Tax Rate (%):</label>
-    <input type="number" id="marginalTaxRate">
+    <label>Annual Property Depreciation ($):</label>
+    <input type="number" id="depreciation" min="0" placeholder="e.g. 3000" />
+
+    <label>Your Taxable Income (before property loss) ($):</label>
+    <input type="number" id="taxableIncome" min="0" placeholder="e.g. 85000" />
 
     <button onclick="calculate()">Calculate</button>
 
@@ -77,22 +86,55 @@
 
   <script>
     function calculate() {
-      const rentalIncome = parseFloat(document.getElementById("rentalIncome").value) || 0;
-      const interestExpenses = parseFloat(document.getElementById("interestExpenses").value) || 0;
-      const otherExpenses = parseFloat(document.getElementById("otherExpenses").value) || 0;
-      const depreciation = parseFloat(document.getElementById("propertyDepreciation").value) || 0;
-      const taxRate = (parseFloat(document.getElementById("marginalTaxRate").value) || 0) / 100;
+      const rentalIncome = parseFloat(document.getElementById("rentalIncome").value);
+      const interest = parseFloat(document.getElementById("interestExpenses").value);
+      const other = parseFloat(document.getElementById("otherExpenses").value);
+      const depreciation = parseFloat(document.getElementById("depreciation").value);
+      const taxableIncome = parseFloat(document.getElementById("taxableIncome").value);
 
-      const totalExpenses = interestExpenses + otherExpenses + depreciation;
-      const netLoss = rentalIncome - totalExpenses;
-      const taxSaving = Math.abs(netLoss) * taxRate;
+      const resultDiv = document.getElementById("result");
 
-      let output = `
-        <strong>Net Rental Position:</strong> $${netLoss.toFixed(2)}<br>
+      // Input validation
+      if ([rentalIncome, interest, other, depreciation, taxableIncome].some(isNaN)) {
+        resultDiv.innerHTML = '<p class="error">Please enter valid values in all fields.</p>';
+        return;
+      }
+
+      // Net rental position
+      const totalExpenses = interest + other + depreciation;
+      const netRental = rentalIncome - totalExpenses;
+
+      // Adjusted taxable income
+      const adjustedTaxable = taxableIncome + Math.min(0, netRental); // if loss, reduce taxable
+
+      // Tax before and after
+      const taxBefore = calculateTax(taxableIncome);
+      const taxAfter = calculateTax(adjustedTaxable);
+      const taxSaving = taxBefore - taxAfter;
+
+      resultDiv.innerHTML = `
+        <strong>Net Rental Position:</strong> $${netRental.toFixed(2)}<br>
+        <strong>Adjusted Taxable Income:</strong> $${adjustedTaxable.toFixed(2)}<br>
         <strong>Estimated Tax Saving:</strong> $${taxSaving.toFixed(2)}
       `;
+    }
 
-      document.getElementById("result").innerHTML = output;
+    function calculateTax(income) {
+      let tax = 0;
+
+      if (income <= 18200) {
+        tax = 0;
+      } else if (income <= 45000) {
+        tax = (income - 18200) * 0.16;
+      } else if (income <= 135000) {
+        tax = 4288 + (income - 45000) * 0.30;
+      } else if (income <= 190000) {
+        tax = 31288 + (income - 135000) * 0.37;
+      } else {
+        tax = 51638 + (income - 190000) * 0.45;
+      }
+
+      return tax;
     }
   </script>
 </body>
