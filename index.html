@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Negative Gearing Calculator - Australia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      color: #004080;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e0f7fa;
+      border-left: 5px solid #00796b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Negative Gearing Calculator</h1>
+    
+    <label for="rentalIncome">Annual Rental Income ($):</label>
+    <input type="number" id="rentalIncome">
+
+    <label for="interestExpenses">Annual Interest Expenses ($):</label>
+    <input type="number" id="interestExpenses">
+
+    <label for="otherExpenses">Other Annual Property Expenses ($):</label>
+    <input type="number" id="otherExpenses">
+
+    <label for="propertyDepreciation">Annual Property Depreciation ($):</label>
+    <input type="number" id="propertyDepreciation">
+
+    <label for="marginalTaxRate">Your Marginal Tax Rate (%):</label>
+    <input type="number" id="marginalTaxRate">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const rentalIncome = parseFloat(document.getElementById("rentalIncome").value) || 0;
+      const interestExpenses = parseFloat(document.getElementById("interestExpenses").value) || 0;
+      const otherExpenses = parseFloat(document.getElementById("otherExpenses").value) || 0;
+      const depreciation = parseFloat(document.getElementById("propertyDepreciation").value) || 0;
+      const taxRate = (parseFloat(document.getElementById("marginalTaxRate").value) || 0) / 100;
+
+      const totalExpenses = interestExpenses + otherExpenses + depreciation;
+      const netLoss = rentalIncome - totalExpenses;
+      const taxSaving = Math.abs(netLoss) * taxRate;
+
+      let output = `
+        <strong>Net Rental Position:</strong> $${netLoss.toFixed(2)}<br>
+        <strong>Estimated Tax Saving:</strong> $${taxSaving.toFixed(2)}
+      `;
+
+      document.getElementById("result").innerHTML = output;
+    }
+  </script>
+</body>
+</html>
