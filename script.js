@@ -1,55 +1,33 @@
-
 function openTab(tabId) {
-  document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
-  document.getElementById(tabId).style.display = "block";
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
 }
 
-function annualRent(weeklyRent) {
-  return weeklyRent * 52;
-}
-
-function totalExpenses(rent, water, land, council, body, agentPercent, letting, ads, maintenance, insurance, interest) {
-  const agentFee = (agentPercent / 100) * rent;
-  return water + land + council + body + agentFee + letting + ads + maintenance + insurance + interest;
+function getPropertyData(prefix) {
+  const rent = parseFloat(document.getElementById(`rent${prefix}`).value) || 0;
+  const annualRent = rent * 52;
+  const expenses = [
+    'water', 'land', 'council', 'body', 'agent', 'letting',
+    'advertising', 'maintenance', 'insurance', 'interest'
+  ].reduce((total, field) => {
+    let val = parseFloat(document.getElementById(`${field}${prefix}`).value) || 0;
+    if (field === 'agent') val = (val / 100) * annualRent;
+    return total + val;
+  }, 0);
+  return { annualRent, expenses };
 }
 
 function calculate() {
-  const rent1 = annualRent(Number(document.getElementById("rent1").value || 0));
-  const exp1 = totalExpenses(rent1,
-    Number(document.getElementById("water1").value || 0),
-    Number(document.getElementById("land1").value || 0),
-    Number(document.getElementById("council1").value || 0),
-    Number(document.getElementById("body1").value || 0),
-    Number(document.getElementById("agent1").value || 0),
-    Number(document.getElementById("letting1").value || 0),
-    Number(document.getElementById("ads1").value || 0),
-    Number(document.getElementById("maintenance1").value || 0),
-    Number(document.getElementById("insurance1").value || 0),
-    Number(document.getElementById("interest1").value || 0)
-  );
-
-  const rent2 = annualRent(Number(document.getElementById("rent2").value || 0));
-  const exp2 = totalExpenses(rent2,
-    Number(document.getElementById("water2").value || 0),
-    Number(document.getElementById("land2").value || 0),
-    Number(document.getElementById("council2").value || 0),
-    Number(document.getElementById("body2").value || 0),
-    Number(document.getElementById("agent2").value || 0),
-    Number(document.getElementById("letting2").value || 0),
-    Number(document.getElementById("ads2").value || 0),
-    Number(document.getElementById("maintenance2").value || 0),
-    Number(document.getElementById("insurance2").value || 0),
-    Number(document.getElementById("interest2").value || 0)
-  );
-
-  const totalRent = rent1 + rent2;
-  const totalExp = exp1 + exp2;
-  const netPosition = totalRent - totalExp;
-
-  document.getElementById("results").innerHTML = \`
-    <h3>Results</h3>
-    <p>Total Annual Rent: \$\${totalRent.toFixed(2)}</p>
-    <p>Total Annual Expenses: \$\${totalExp.toFixed(2)}</p>
-    <p>Net Rental Position: <strong>\${netPosition < 0 ? 'Negative' : 'Positive'}</strong> \$\${netPosition.toFixed(2)}</p>
-  \`;
+  const p1 = getPropertyData('1');
+  const p2 = getPropertyData('2');
+  const totalRent = p1.annualRent + p2.annualRent;
+  const totalExpenses = p1.expenses + p2.expenses;
+  const net = totalRent - totalExpenses;
+  const gearing = net < 0 ? "Negatively Geared" : "Positively Geared";
+  document.getElementById('results').innerText =
+    `Total Rent: $${totalRent.toFixed(2)}\n` +
+    `Total Expenses: $${totalExpenses.toFixed(2)}\n` +
+    `Net Rental Position: $${net.toFixed(2)} (${gearing})`;
 }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,46 +7,43 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Negative Gearing Calculator (2025 ATO Tax Rates)</h1>
+  <h1>Negative Gearing Calculator</h1>
   <div class="tabs">
-    <button onclick="openTab('property1')">Property 1</button>
-    <button onclick="openTab('property2')">Property 2</button>
+    <button class="tab-button active" onclick="openTab('property1')">Property 1</button>
+    <button class="tab-button" onclick="openTab('property2')">Property 2</button>
   </div>
-
-  <div id="property1" class="tab-content">
+  <div id="property1" class="tab-content active">
     <h2>Property 1 Details</h2>
     <form id="form1">
-      <label>Weekly Rent: <input type="number" id="rent1" required /></label>
-      <label>Water Charges (Annual): <input type="number" id="water1" /></label>
-      <label>Land Tax (Annual): <input type="number" id="land1" /></label>
-      <label>Council Rates (Annual): <input type="number" id="council1" /></label>
-      <label>Body Corporate Fees (Annual): <input type="number" id="body1" /></label>
-      <label>Agent Fees (% of Rent): <input type="number" id="agent1" /></label>
+      <label>Weekly Rent: <input type="number" id="rent1" /></label>
+      <label>Water Charges (annual): <input type="number" id="water1" /></label>
+      <label>Land Tax (annual): <input type="number" id="land1" /></label>
+      <label>Council Rates (annual): <input type="number" id="council1" /></label>
+      <label>Body Corporate Fees (annual): <input type="number" id="body1" /></label>
+      <label>Agent Fees (% of rent): <input type="number" id="agent1" /></label>
       <label>Letting Fees: <input type="number" id="letting1" /></label>
-      <label>Advertising Fees: <input type="number" id="ads1" /></label>
+      <label>Advertising Fees: <input type="number" id="advertising1" /></label>
       <label>Maintenance Expenses: <input type="number" id="maintenance1" /></label>
-      <label>Insurance: <input type="number" id="insurance1" /></label>
+      <label>Insurance Expenses: <input type="number" id="insurance1" /></label>
       <label>Interest Expenses: <input type="number" id="interest1" /></label>
     </form>
   </div>
-
-  <div id="property2" class="tab-content" style="display:none;">
+  <div id="property2" class="tab-content">
     <h2>Property 2 Details</h2>
     <form id="form2">
-      <label>Weekly Rent: <input type="number" id="rent2" required /></label>
-      <label>Water Charges (Annual): <input type="number" id="water2" /></label>
-      <label>Land Tax (Annual): <input type="number" id="land2" /></label>
-      <label>Council Rates (Annual): <input type="number" id="council2" /></label>
-      <label>Body Corporate Fees (Annual): <input type="number" id="body2" /></label>
-      <label>Agent Fees (% of Rent): <input type="number" id="agent2" /></label>
+      <label>Weekly Rent: <input type="number" id="rent2" /></label>
+      <label>Water Charges (annual): <input type="number" id="water2" /></label>
+      <label>Land Tax (annual): <input type="number" id="land2" /></label>
+      <label>Council Rates (annual): <input type="number" id="council2" /></label>
+      <label>Body Corporate Fees (annual): <input type="number" id="body2" /></label>
+      <label>Agent Fees (% of rent): <input type="number" id="agent2" /></label>
       <label>Letting Fees: <input type="number" id="letting2" /></label>
-      <label>Advertising Fees: <input type="number" id="ads2" /></label>
+      <label>Advertising Fees: <input type="number" id="advertising2" /></label>
       <label>Maintenance Expenses: <input type="number" id="maintenance2" /></label>
-      <label>Insurance: <input type="number" id="insurance2" /></label>
+      <label>Insurance Expenses: <input type="number" id="insurance2" /></label>
       <label>Interest Expenses: <input type="number" id="interest2" /></label>
     </form>
   </div>
-
   <button onclick="calculate()">Calculate</button>
   <div id="results"></div>
   <script src="script.js"></script>
