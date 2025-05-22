@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Australian Income Tax & Property Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Australian Income Tax & Property Calculator</h1>
+        <div class="financial-year-selector">
+            <label for="financialYear">Financial Year:</label>
+            <select id="financialYear">
+                <option value="2023-24">1 July 2023 – 30 June 2024</option>
+                <option value="2024-25">1 July 2024 – 30 June 2025</option>
+                <option value="2025-26" selected>1 July 2025 – 30 June 2026</option>
+            </select>
+        </div>
+
+        <div class="tab-nav">
+            <button class="tab-button active" data-tab="personalIncomeTab">Personal Income & Tax</button>
+            <div id="propertyTabsContainer">
+                </div>
+            <button id="addPropertyBtn" class="tab-button tab-add-property">Add Investment Property</button>
+        </div>
+
+        <div class="tab-content">
+            <div id="personalIncomeTab" class="tab-content-item active">
+                <div class="input-section">
+                    <h2>Your Personal Income & Expenses</h2>
+                    <div class="input-group">
+                        <label for="grossIncome">Annual Gross Income from Employment/Business ($):</label>
+                        <input type="number" id="grossIncome" value="80000" min="0">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="otherIncome">Other Assessable Income (e.g., dividends, interest) ($):</label>
+                        <input type="number" id="otherIncome" value="0" min="0">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="workExpenses">Total Work-Related Expenses ($):</label>
+                        <input type="number" id="workExpenses" value="1000" min="0">
+                        <p class="hint">e.g., uniforms, self-education, tools, home office (keep records!)</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="salarySacrificeSuper">Annual Salary Sacrifice to Super ($):</label>
+                        <input type="number" id="salarySacrificeSuper" value="0" min="0">
+                        <p class="hint">Contributions made from pre-tax income into your super.</p>
+                    </div>
+
+                    <h3>Medicare & Relationship Status</h3>
+                    <div class="input-group">
+                        <label for="privateHealthInsurance">Do you have Private Hospital Cover?</label>
+                        <select id="privateHealthInsurance">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="relationshipStatus">Relationship Status (for MLS family threshold):</label>
+                        <select id="relationshipStatus">
+                            <option value="single">Single</option>
+                            <option value="couple">Couple/Family</option>
+                        </select>
+                    </div>
+                    <div class="input-group couple-income-group" style="display:none;">
+                        <label for="spouseIncome">Spouse's Taxable Income ($):</label>
+                        <input type="number" id="spouseIncome" value="0" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="dependents">Number of Dependant Children (for MLS family threshold):</label>
+                        <input type="number" id="dependents" value="0" min="0">
+                    </div>
+
+                    <h3>Student Loan (HECS/HELP)</h3>
+                    <div class="input-group">
+                        <label for="hecsDebt">Do you have a HECS/HELP debt?</label>
+                        <select id="hecsDebt">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="results-section">
+                    <h2>Your Estimated Tax & Super</h2>
+                    <p><strong>Total Assessable Income (incl. properties):</strong> <span id="totalAssessableIncome">$0.00</span></p>
+                    <p><strong>Total Deductions (incl. property losses):</strong> <span id="totalDeductions">$0.00</span></p>
+                    <p><strong>Overall Taxable Income:</strong> <span id="overallTaxableIncome">$0.00</span></p>
+
+                    <h3>Calculations:</h3>
+                    <p>Annual Income Tax: <span id="incomeTax">$0.00</span></p>
+                    <p class="offset-display">Low Income Tax Offset (LITO): <span id="lito">$0.00</span></p>
+                    <p>Net Income Tax Payable: <span id="netTaxPayable">$0.00</span></p>
+                    <p>Medicare Levy (2%): <span id="medicareLevy">$0.00</span></p>
+                    <p class="mls-display">Medicare Levy Surcharge (MLS): <span id="medicareLevySurcharge">$0.00</span></p>
+                    <p class="mls-display">Total Medicare Related Charges: <span id="totalMedicareCharges">$0.00</span></p>
+                    <p class="hecs-display">Compulsory HECS/HELP Repayment: <span id="hecsRepayment">$0.00</span></p>
+
+                    <p>Estimated Superannuation Guarantee (SG): <span id="superannuationGuarantee">$0.00</span></p>
+
+                    <h3 class="net-income">Estimated Net Income (after Tax, Medicare & HECS/HELP): <span id="netIncome">$0.00</span></h3>
+
+                </div>
+            </div>
+
+            <template id="propertyTabTemplate">
+                <div class="tab-content-item property-content-item">
+                    <div class="property-header">
+                        <h2>Investment Property <span class="property-number"></span></h2>
+                        <input type="text" class="property-name-input" placeholder="e.g. 123 Main St, Suburb">
+                        <button class="delete-property-btn">Delete Property</button>
+                    </div>
+
+                    <div class="input-section">
+                        <h3>Income</h3>
+                        <div class="input-group">
+                            <label>Annual Rental Income ($):</label>
+                            <input type="number" class="property-rental-income" value="0" min="0">
+                        </div>
+
+                        <h3>Expenses</h3>
+                        <div class="input-group">
+                            <label>Annual Interest Expense on Loan ($):</label>
+                            <input type="number" class="property-interest-expense" value="0" min="0">
+                            <p class="hint">Portion of your loan repayment that is interest for the year.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Advertising for Tenants ($):</label>
+                            <input type="number" class="property-advertising" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Bank Charges ($):</label>
+                            <input type="number" class="property-bank-charges" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Borrowing Costs (Annual Share) ($):</label>
+                            <input type="number" class="property-borrowing-costs" value="0" min="0">
+                            <p class="hint">Costs like loan application fees, valuation fees. Amortized over 5 years.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Cleaning ($):</label>
+                            <input type="number" class="property-cleaning" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Council Rates ($):</label>
+                            <input type="number" class="property-council-rates" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Gardening & Lawn Mowing ($):</label>
+                            <input type="number" class="property-gardening" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Land Tax ($):</label>
+                            <input type="number" class="property-land-tax" value="0" min="0">
+                            <p class="hint">Applicable in some states based on land value.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Landlord Insurance ($):</label>
+                            <input type="number" class="property-insurance" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Legal Expenses (for tenant issues) ($):</label>
+                            <input type="number" class="property-legal-expenses" value="0" min="0">
+                            <p class="hint">e.g., eviction costs, not purchase/sale conveyancing.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Loss of Rent Insurance ($):</label>
+                            <input type="number" class="property-loss-of-rent-insurance" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Pest Control ($):</label>
+                            <input type="number" class="property-pest-control" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Property Management Fees ($):</label>
+                            <input type="number" class="property-management-fees" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Quantity Surveyor's Fees ($):</label>
+                            <input type="number" class="property-quantity-surveyor-fees" value="0" min="0">
+                            <p class="hint">For preparing a depreciation schedule.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Repairs & Maintenance ($):</label>
+                            <input type="number" class="property-repairs-maintenance" value="0" min="0">
+                            <p class="hint">Fixing existing wear and tear, not improvements.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Strata/Body Corporate Fees ($):</label>
+                            <input type="number" class="property-strata-fees" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Travel Expenses (to inspect property) ($):</label>
+                            <input type="number" class="property-travel-expenses" value="0" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Water Rates ($):</label>
+                            <input type="number" class="property-water-rates" value="0" min="0">
+                        </div>
+                         <div class="input-group">
+                            <label>Depreciation (Building & Plant/Equipment) ($):</label>
+                            <input type="number" class="property-depreciation" value="0" min="0">
+                            <p class="hint">Based on a depreciation schedule from a quantity surveyor.</p>
+                        </div>
+                        <div class="input-group">
+                            <label>Other Deductible Expenses ($):</label>
+                            <input type="number" class="property-other-expenses" value="0" min="0">
+                            <p class="hint">e.g., accounting fees, stationery, phone, security.</p>
+                        </div>
+                    </div>
+
+                    <div class="results-section property-results">
+                        <h3>Property Specific Summary</h3>
+                        <p>Total Annual Rental Income: <span class="total-property-rental-income">$0.00</span></p>
+                        <p>Total Annual Property Expenses: <span class="total-property-expenses">$0.00</span></p>
+                        <p><strong>Net Property Income/Loss:</strong> <span class="net-property-income-loss">$0.00</span></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <p class="disclaimer full-width-disclaimer">
+            <strong>Disclaimer:</strong> This calculator provides an estimate based on current announced tax rates and general rules for the selected financial year. It does not account for all individual circumstances, offsets, or specific deductions. Always consult a registered tax agent or financial advisor for personalized advice.
+            Superannuation Guarantee is employer contribution and does not reduce your take-home pay directly unless you make salary sacrifice contributions. Property calculations are for illustrative purposes and do not cover all deductible expenses or complex scenarios. Negative gearing involves deducting a net rental loss from other income.
+        </p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

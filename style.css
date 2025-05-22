@@ -1,34 +1,293 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #eef2f7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to top */
+    min-height: 100vh;
+    margin: 20px;
+    color: #333;
+    box-sizing: border-box;
 }
-.tabs {
-  margin-bottom: 10px;
+
+.container {
+    background-color: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px; /* Increased max-width for tabs */
+    box-sizing: border-box;
 }
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+}
+
+.financial-year-selector {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.financial-year-selector label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.financial-year-selector select {
+    padding: 8px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 0.9em;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+h2 {
+    color: #34495e;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+}
+
+h3 {
+    color: #4CAF50; /* A pleasant green */
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.input-section {
+    padding-top: 15px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+.input-group input[type="number"],
+.input-group input[type="text"],
+.input-group select {
+    width: calc(100% - 22px); /* Account for padding */
+    padding: 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 1.1em;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="number"]:focus,
+.input-group input[type="text"]:focus,
+.input-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.input-group .hint {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    display: inline-block; /* For buttons within sections */
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.results-section {
+    margin-top: 35px;
+    border-top: 1px solid #eee;
+    padding-top: 25px;
+}
+
+.results-section p {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    display: flex; /* For aligning text and value */
+    justify-content: space-between;
+    align-items: center;
+}
+
+.results-section p span {
+    font-weight: bold;
+    color: #007bff;
+    text-align: right;
+}
+
+.results-section p strong {
+    color: #2c3e50;
+}
+
+.net-income {
+    font-size: 1.4em;
+    color: #28a745; /* Green for net income */
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px solid #28a745;
+}
+
+/* Specific styling for MLS items to easily toggle visibility */
+.mls-display, .hecs-display, .offset-display {
+    display: flex; /* Ensure these also use flex for alignment */
+}
+
+.disclaimer.full-width-disclaimer {
+    font-size: 0.8em;
+    color: #888;
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+    line-height: 1.6;
+}
+
+/* Tab Styles */
+.tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+    gap: 5px; /* Space between tabs */
+}
+
 .tab-button {
-  padding: 10px;
-  cursor: pointer;
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap; /* Prevent wrapping */
+    flex-grow: 1; /* Allow buttons to grow */
+    max-width: 200px; /* Limit individual tab width */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+.tab-button:hover:not(.active) {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
 .tab-button.active {
-  background-color: #4CAF50;
-  color: white;
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    position: relative;
+    z-index: 1;
+    margin-bottom: -2px; /* Overlap border */
 }
-.tab-content {
-  display: none;
+
+.tab-add-property {
+    background-color: #28a745; /* Green for add button */
+    border-color: #28a745;
+    color: white;
+    font-size: 1em;
+    flex-grow: 0; /* Don't grow as much */
+    padding: 8px 12px;
+    white-space: nowrap;
 }
-.tab-content.active {
-  display: block;
+
+.tab-add-property:hover {
+    background-color: #218838;
 }
-form label {
-  display: block;
-  margin-bottom: 5px;
+
+#propertyTabsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-grow: 1; /* Allow property tabs to take available space */
 }
-input[type="number"] {
-  width: 200px;
-  margin-bottom: 10px;
+
+
+.tab-content-item {
+    display: none;
+    padding: 15px 0;
+    border-top: 1px solid #eee; /* Visual separation from tabs */
 }
-#results {
-  margin-top: 20px;
-  font-weight: bold;
-  white-space: pre-line;
+
+.tab-content-item.active {
+    display: block;
+}
+
+/* Property specific styles */
+.property-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.property-header h2 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.property-header .property-name-input {
+    flex-grow: 2;
+    padding: 8px 10px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    width: auto; /* Override default width */
+}
+
+.delete-property-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    flex-shrink: 0; /* Don't allow it to shrink */
+}
+
+.delete-property-btn:hover {
+    background-color: #c82333;
+}
+
+/* Ensure results sections within properties are also formatted */
+.property-results p span {
+    color: #4CAF50; /* Green for property specific results */
+}
+.property-results p strong span {
+    color: #34495e; /* Darker for the net income/loss */
 }
