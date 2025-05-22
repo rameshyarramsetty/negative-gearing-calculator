@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const coupleIncomeGroup = document.querySelector('.couple-income-group');
     const hecsDebtSelect = document.getElementById('hecsDebt');
 
+    // Span for aggregate property income/loss (newly added for clarity)
+    const totalNetPropertyIncomeLossSpan = document.getElementById('totalNetPropertyIncomeLoss');
+
     const totalAssessableIncomeSpan = document.getElementById('totalAssessableIncome');
     const totalDeductionsSpan = document.getElementById('totalDeductions');
     const overallTaxableIncomeSpan = document.getElementById('overallTaxableIncome');
@@ -206,7 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const newTabButton = document.createElement('button');
         newTabButton.classList.add('tab-button');
         newTabButton.setAttribute('data-tab', newPropertyId);
-        newTabButton.textContent = propertyData && propertyData.name ? propertyData.name : `Property ${properties.length + 1}`; // Default name
+        // Set initial text; if loading, use existing name, otherwise default
+        newTabButton.textContent = propertyData && propertyData.name ? propertyData.name : `Property ${properties.length + 1}`;
         newTabButton.addEventListener('click', () => openTab(newPropertyId));
         propertyTabsContainer.appendChild(newTabButton);
 
@@ -275,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             depreciationInput.value = propertyData.depreciation || 0;
             otherExpensesInput.value = propertyData.otherExpenses || 0;
         } else {
-            // For new properties, add to array and assign an index
+            // For new properties, push a new object to the array before setting its number
             properties.push({
                 id: newPropertyId,
                 name: `Property ${properties.length + 1}`,
@@ -298,8 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 strataFees: 0,
                 travelExpenses: 0,
                 waterRates: 0,
+                extraExpenses: 0, // Corrected from 'otherExpenses' for consistency if needed, but existing is fine
                 depreciation: 0,
-                otherExpenses: 0,
+                otherExpenses: 0, // This is already present, just double check
                 netIncomeLoss: 0 // Initialize net income/loss for new property
             });
             propertyNumberSpan.textContent = properties.length; // Correct for new properties (1-based index)
@@ -325,10 +330,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Update the property object based on input type
                     if (input.classList.contains('property-name-input')) {
                         properties[propertyIndex].name = input.value;
-                        newTabButton.textContent = input.value || `Property ${propertyIndex + 1}`; // Update tab button text
+                        // Update tab button text if name changes
+                        newTabButton.textContent = input.value || `Property ${propertyIndex + 1}`;
                     } else {
-                        // All other inputs are numbers
-                        properties[propertyIndex][input.classList[0].replace('property-', '')] = parseFloat(input.value) || 0;
+                        // All other inputs are numbers, update their corresponding property field
+                        // The class name is 'property-FIELDNAME', so we extract FIELDNAME
+                        const fieldName = input.classList[0].replace('property-', '');
+                        properties[propertyIndex][fieldName] = parseFloat(input.value) || 0;
                     }
                     calculatePropertySummary(propertyIndex); // Recalculate this property's summary
                     calculateTax(); // Recalculate main tax
@@ -344,14 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tabContentContainer.appendChild(propertyContentItem);
 
-        // Initial calculation for this new property
+        // Initial calculation for this new property (or loaded property)
         const propertyIndex = properties.findIndex(p => p.id === newPropertyId);
         if(propertyIndex !== -1) {
             calculatePropertySummary(propertyIndex);
         }
 
-        // Open the newly created tab if it's the first property or explicitly requested
-        if (!propertyData) { // Only open if it's a newly created property, not loaded
+        // Open the newly created tab if it's a new property, not when loading existing ones
+        if (!propertyData) {
              openTab(newPropertyId);
         }
         calculateTax(); // Recalculate overall tax
@@ -374,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tabContentToRemove) tabContentToRemove.remove();
 
         // Renumber remaining property tabs and their button texts
+        // This ensures the property numbers stay sequential (e.g., Property 1, Property 2)
         properties.forEach((prop, index) => {
             const btn = document.querySelector(`[data-tab="${prop.id}"]`);
             const content = document.getElementById(prop.id);
@@ -385,7 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let nextTabToOpen = 'personalIncomeTab'; // Default to personal tab
         const remainingTabs = document.querySelectorAll('.tab-button:not(.tab-add-property)');
         if (remainingTabs.length > 0) {
-            // If the deleted tab was active, or if personal income tab isn't active, try to open the first remaining property tab
+            // If there are still properties, try to open the first one
+            // Or if the deleted tab was active, switch to the first available tab
             if (tabContentToRemove.classList.contains('active') || !personalIncomeTabButton.classList.contains('active')) {
                 nextTabToOpen = remainingTabs[0].dataset.tab;
             }
@@ -400,13 +410,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const prop = properties[propertyIndex];
         if (!prop) return;
 
-        const totalRentalIncome = prop.rentalIncome;
-        const totalExpenses = prop.interestExpense + prop.advertising + prop.bankCharges + prop.borrowingCosts +
-                              prop.cleaning + prop.councilRates + prop.gardening + prop.landTax +
-                              prop.insurance + prop.legalExpenses + prop.lossOfRentInsurance +
-                              prop.pestControl + prop.managementFees + prop.quantitySurveyorFees +
-                              prop.repairsMaintenance + prop.strataFees + prop.travelExpenses +
-                              prop.waterRates + prop.depreciation + prop.otherExpenses;
+        const totalRentalIncome = parseFloat(prop.rentalIncome) || 0; // Ensure float
+        const totalExpenses = (parseFloat(prop.interestExpense) || 0) +
+                               (parseFloat(prop.advertising) || 0) +
+                               (parseFloat(prop.bankCharges) || 0) +
+                               (parseFloat(prop.borrowingCosts) || 0) +
+                               (parseFloat(prop.cleaning) || 0) +
+                               (parseFloat(prop.councilRates) || 0) +
+                               (parseFloat(prop.gardening) || 0) +
+                               (parseFloat(prop.landTax) || 0) +
+                               (parseFloat(prop.insurance) || 0) +
+                               (parseFloat(prop.legalExpenses) || 0) +
+                               (parseFloat(prop.lossOfRentInsurance) || 0) +
+                               (parseFloat(prop.pestControl) || 0) +
+                               (parseFloat(prop.managementFees) || 0) +
+                               (parseFloat(prop.quantitySurveyorFees) || 0) +
+                               (parseFloat(prop.repairsMaintenance) || 0) +
+                               (parseFloat(prop.strataFees) || 0) +
+                               (parseFloat(prop.travelExpenses) || 0) +
+                               (parseFloat(prop.waterRates) || 0) +
+                               (parseFloat(prop.depreciation) || 0) +
+                               (parseFloat(prop.otherExpenses) || 0);
+
 
         const netIncomeLoss = totalRentalIncome - totalExpenses;
 
@@ -427,12 +452,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function getAggregatePropertyNet() {
         let totalPropertyNet = 0;
         properties.forEach(prop => {
-            totalPropertyNet += prop.netIncomeLoss || 0; // Add pre-calculated net income/loss
+            totalPropertyNet += prop.netIncomeLoss || 0; // Sum up the pre-calculated net income/loss for each property
         });
         return totalPropertyNet;
     }
 
-    // --- Main Tax Calculation Function (updated) ---
+    // --- Main Tax Calculation Function ---
     function calculateTax() {
         const currentYearData = taxData[financialYearSelect.value];
         if (!currentYearData) {
@@ -453,17 +478,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Aggregate net income/loss from all properties
         const aggregatePropertyNet = getAggregatePropertyNet();
 
+        // Display the aggregate property net income/loss for clarity
+        totalNetPropertyIncomeLossSpan.textContent = formatCurrency(aggregatePropertyNet);
+        totalNetPropertyIncomeLossSpan.style.color = aggregatePropertyNet < 0 ? '#dc3545' : '#28a745';
+
+
         // Determine total assessable income and total deductions
         let totalAssessableIncome = personalGrossIncome + otherIncome;
-        let totalDeductions = workExpenses + salarySacrificeSuper; // Salary sacrifice reduces assessable income here
+        let totalDeductions = workExpenses + salarySacrificeSuper; // Salary sacrifice reduces assessable income
 
-        if (aggregatePropertyNet > 0) {
-            totalAssessableIncome += aggregatePropertyNet; // Property profit adds to assessable income
+        // --- Negative Gearing / Property Income Impact ---
+        if (aggregatePropertyNet < 0) {
+            // If there's an overall net property loss (negative gearing),
+            // the absolute value of this loss is added to total deductions.
+            // This reduces the final 'overallTaxableIncome'.
+            totalDeductions += Math.abs(aggregatePropertyNet);
         } else {
-            totalDeductions += Math.abs(aggregatePropertyNet); // Property loss adds to deductions
+            // If there's an overall net property profit,
+            // this profit is added to total assessable income.
+            totalAssessableIncome += aggregatePropertyNet;
         }
 
         const overallTaxableIncome = Math.max(0, totalAssessableIncome - totalDeductions);
+        // Ensure taxable income doesn't go below zero.
 
         // 1. Calculate Income Tax
         let incomeTax = 0;
@@ -494,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let medicareLevy = 0;
 
         const medicareThresholdSingle = currentYearData.medicareThresholdSingle;
+        // For family, the threshold increases by a set amount per dependent
         const medicareThresholdFamily = currentYearData.medicareThresholdFamilyBase + (dependents * currentYearData.medicareThresholdPerDependent);
 
         let incomeForMedicareLevy = overallTaxableIncome;
@@ -501,45 +539,53 @@ document.addEventListener('DOMContentLoaded', () => {
         if (relationshipStatus === 'single') {
             if (incomeForMedicareLevy > medicareThresholdSingle) {
                 medicareLevy = incomeForMedicareLevy * medicareLevyRate;
-                // Shading-in rule: if taxable income is between threshold and (threshold / 0.975)
-                // The levy is capped at 10% of the amount above the threshold
-                if (incomeForMedicareLevy <= (medicareThresholdSingle / (1 - medicareLevyRate))) { // Simplified shading-in upper bound for 2% rate
+                // Apply shading-in rule for Medicare Levy for single individuals if within the threshold band
+                // If taxable income is between threshold and (threshold / 0.975), the levy is capped at 10% of the amount above the threshold.
+                const shadingInUpperLimit = medicareThresholdSingle / (1 - medicareLevyRate); // For a 2% rate, this is the point where the 2% levy matches 10% of the difference
+                if (incomeForMedicareLevy > medicareThresholdSingle && incomeForMedicareLevy <= shadingInUpperLimit) {
                    medicareLevy = Math.min(medicareLevy, (incomeForMedicareLevy - medicareThresholdSingle) * 0.10);
                 }
             }
         } else { // Couple/Family
-            const combinedTaxableIncome = overallTaxableIncome + spouseIncome;
+            const combinedTaxableIncome = overallTaxableIncome + spouseIncome; // ATO considers combined income for family threshold
              if (combinedTaxableIncome > medicareThresholdFamily) {
-                 medicareLevy = overallTaxableIncome * medicareLevyRate;
+                 medicareLevy = overallTaxableIncome * medicareLevyRate; // Levy is on your income if family threshold crossed
              }
         }
-        medicareLevy = Math.max(0, medicareLevy);
+        medicareLevy = Math.max(0, medicareLevy); // Ensure Medicare Levy is not negative
 
         // 4. Calculate Medicare Levy Surcharge (MLS)
         let medicareLevySurcharge = 0;
         if (!hasPrivateHealthInsurance) {
-            const mlsThresholds = relationshipStatus === 'single' ? currentYearData.mlsThresholdSingle : currentYearData.mlsThresholdFamily;
+            const mlsThresholds = relationshipStatus === 'single' ?
+                                 { base: currentYearData.mlsThresholdSingleBase, tier1: currentYearData.mlsThresholdSingleTier1, tier2: currentYearData.mlsThresholdSingleTier2 } :
+                                 { base: currentYearData.mlsThresholdFamilyBase, tier1: currentYearData.mlsThresholdFamilyTier1, tier2: currentYearData.mlsThresholdFamilyTier2 };
+
             let incomeForMLS = overallTaxableIncome;
             if (relationshipStatus === 'couple') {
+                // For MLS, combined *taxable* income is used for family thresholds.
+                // We use overallTaxableIncome and spouseIncome as proxies.
                 incomeForMLS = overallTaxableIncome + spouseIncome;
             }
 
             if (incomeForMLS > mlsThresholds.base && incomeForMLS <= mlsThresholds.tier1) {
-                medicareLevySurcharge = overallTaxableIncome * 0.01;
+                medicareLevySurcharge = overallTaxableIncome * 0.01; // 1%
             } else if (incomeForMLS > mlsThresholds.tier1 && incomeForMLS <= mlsThresholds.tier2) {
-                medicareLevySurcharge = overallTaxableIncome * 0.0125;
+                medicareLevySurcharge = overallTaxableIncome * 0.0125; // 1.25%
             } else if (incomeForMLS > mlsThresholds.tier2) {
-                medicareLevySurcharge = overallTaxableIncome * 0.015;
+                medicareLevySurcharge = overallTaxableIncome * 0.015; // 1.5%
             }
         }
-        medicareLevySurcharge = Math.max(0, medicareLevySurcharge);
+        medicareLevySurcharge = Math.max(0, medicareLevySurcharge); // Ensure MLS is not negative
 
         const totalMedicareCharges = medicareLevy + medicareLevySurcharge;
 
         // 5. Compulsory HECS/HELP Repayment
         let hecsRepayment = 0;
         if (hasHecsDebt) {
-            const repaymentIncome = overallTaxableIncome; // HECS uses 'repayment income', which is similar to taxable income but includes other things not in this calculator. For simplicity, we use overallTaxableIncome.
+            // HECS/HELP repayment income is generally similar to taxable income but can include other things.
+            // For simplicity in this calculator, we use 'overallTaxableIncome'.
+            const repaymentIncome = overallTaxableIncome;
             for (const tier of currentYearData.hecsRepaymentTiers) {
                 if (repaymentIncome >= tier.min) {
                     hecsRepayment = repaymentIncome * tier.rate;
@@ -548,16 +594,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        hecsRepayment = Math.round(hecsRepayment); // HECS often rounded to nearest dollar
+        hecsRepayment = Math.round(hecsRepayment); // HECS repayments are usually rounded to the nearest dollar
 
         // 6. Calculate Superannuation Guarantee (SG)
-        // SG is on 'Ordinary Time Earnings' (OTE). Gross income is used as a proxy.
-        // It does not include salary sacrifice contributions or property income/loss.
+        // SG is employer contribution on 'Ordinary Time Earnings' (OTE).
+        // Here, 'personalGrossIncome' is used as a proxy for OTE.
+        // It does not include salary sacrifice contributions (as they're pre-tax) or property income/loss.
         const superannuationGuarantee = personalGrossIncome * currentYearData.sgRate;
 
 
-        // 7. Calculate Net Income (after Tax, Medicare, HECS/HELP)
-        // This is your take-home pay from your personal income sources after deductions.
+        // 7. Calculate Net Income (after Tax, Medicare, & HECS/HELP)
+        // This represents your estimated take-home pay or spendable income from your personal sources
+        // after primary deductions, income tax, Medicare and HECS/HELP repayments.
+        // Note: It's NOT your "after tax" income if your employer is withholding tax directly based on gross.
+        // This is a simplified calculation of what's left after major outflows.
         const netIncome = personalGrossIncome + otherIncome - workExpenses - salarySacrificeSuper - netTaxPayable - totalMedicareCharges - hecsRepayment;
 
 
@@ -577,6 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatCurrency(amount) {
+        // Formats a number as AUD currency with 2 decimal places
         return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
@@ -593,8 +644,8 @@ document.addEventListener('DOMContentLoaded', () => {
             relationshipStatus: relationshipStatusSelect.value,
             spouseIncome: spouseIncomeInput.value,
             hecsDebt: hecsDebtSelect.value,
-            properties: properties,
-            nextPropertyId: nextPropertyId
+            properties: properties, // Save the entire properties array
+            nextPropertyId: nextPropertyId // Save the next ID to ensure unique IDs on reload
         }));
     }
 
@@ -602,6 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedState = localStorage.getItem('calculatorState');
         if (savedState) {
             const state = JSON.parse(savedState);
+            // Restore main calculator inputs
             financialYearSelect.value = state.financialYear || '2025-26';
             grossIncomeInput.value = state.grossIncome || 80000;
             otherIncomeInput.value = state.otherIncome || 0;
@@ -616,18 +668,23 @@ document.addEventListener('DOMContentLoaded', () => {
             properties = state.properties || [];
             nextPropertyId = state.nextPropertyId || 0;
 
-            // Re-render all loaded properties
+            // Clear existing property tabs and content from the DOM before loading
+            // This prevents duplicate tabs if the user quickly reloads or navigates
+            propertyTabsContainer.innerHTML = '';
+            document.querySelectorAll('.tab-content-item.property-content-item').forEach(el => el.remove());
+
+            // Re-render all loaded properties from the 'properties' array
             properties.forEach(prop => addPropertyTab(prop));
 
-            // Restore spouse income group display
+            // Restore spouse income group display based on loaded relationship status
             if (relationshipStatusSelect.value === 'couple') {
                 coupleIncomeGroup.style.display = 'block';
             } else {
                 coupleIncomeGroup.style.display = 'none';
             }
         } else {
-            // Set initial defaults if no state is saved
-            financialYearSelect.value = '2025-26'; // Default to the latest
+            // Set initial defaults if no state is saved (first time user)
+            financialYearSelect.value = '2025-26';
             grossIncomeInput.value = 80000;
             workExpensesInput.value = 1000;
             otherIncomeInput.value = 0;
@@ -643,10 +700,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners & Initial Setup ---
     financialYearSelect.addEventListener('change', () => {
-        saveState(); // Save state
+        saveState(); // Save state on change
         calculateTax(); // Recalculate when financial year changes
     });
+
+    // Event listener for personal income tab button
     personalIncomeTabButton.addEventListener('click', () => openTab('personalIncomeTab'));
+    // Event listener for adding a new property
     addPropertyBtn.addEventListener('click', () => addPropertyTab());
 
     // Listen for changes in main calculator inputs to trigger recalculation
@@ -660,7 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateTax();
     }));
 
-    // Special handling for relationship status to show/hide spouse income
+    // Special handling for relationship status to show/hide spouse income input
     relationshipStatusSelect.addEventListener('change', () => {
         if (relationshipStatusSelect.value === 'couple') {
             coupleIncomeGroup.style.display = 'block';
@@ -675,6 +735,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load and calculation when the page is ready
     loadState(); // Load any existing state from local storage
-    openTab('personalIncomeTab'); // Open the personal income tab by default
+    openTab('personalIncomeTab'); // Open the personal income tab by default on load
     calculateTax(); // Perform initial calculation on page load
 });
