@@ -6,7 +6,6 @@
     <title>Property Negative Gearing Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -134,105 +133,9 @@
             0% { background-color: rgba(59, 130, 246, 0.3); }
             100% { background-color: transparent; }
         }
-        .expense-category {
-            background-color: #f9fafb;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 16px;
-            border-left: 4px solid #3b82f6;
-        }
-        .expense-category-title {
-            font-weight: 600;
-            color: #1e40af;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-        }
-        .expense-type-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-left: 8px;
-        }
-        .cash-expense {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-        .non-cash-expense {
-            background-color: #f0fdf4;
-            color: #047857;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-            margin-left: 5px;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 250px;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.875rem;
-            font-weight: normal;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(59, 130, 246, 0.3);
-            border-radius: 50%;
-            border-top-color: #3b82f6;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @media (max-width: 768px) {
-            .property-grid {
-                grid-template-columns: 1fr;
-            }
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            .expense-grid {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 py-8">
-
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="spinner"></div>
-    </div>
 
     <div class="text-center mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-3">
@@ -307,18 +210,11 @@
 
     <div class="w-full max-w-7xl mb-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center section-title">Your Investment Properties</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 property-grid">
-            <!-- Property 1 Card -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div id="propertyCard1" class="bg-white card p-6 flex flex-col h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">
-                        Investment Property 1 (Surrey Rd)
-                    </h2>
-                    <span id="property1Summary" class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800">
-                        Calculating...
-                    </span>
-                </div>
-                
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Investment Property 1 (Surrey Rd)
+                </h2>
                 <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="isPPR1" class="form-checkbox h-5 w-5 text-yellow-600 rounded-md" />
@@ -367,12 +263,9 @@
                         <div class="mb-3">
                             <label for="landValuePercentage1" class="block text-gray-700 text-sm font-medium mb-2">
                                 Land Value Percentage (%)
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="tooltiptext">Percentage of property value attributed to land for tax calculations</span>
-                                </span>
                             </label>
                             <input type="text" id="landValuePercentage1" value="65" placeholder="e.g., 65" class="w-full p-2 border border-gray-300 rounded-md" />
+                            <p class="text-xs text-gray-500 mt-1">Percentage of property value attributed to land</p>
                         </div>
                         <div class="mt-3 space-y-1">
                             <p class="text-sm text-gray-600"><span class="font-medium">Monthly P&I:</span> <span id="monthlyPI1" class="font-semibold"></span></p>
@@ -390,29 +283,8 @@
                             + Add Custom
                         </button>
                     </h3>
-                    
-                    <!-- Expense Categories -->
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Operating Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 expense-grid" id="expensesContainer1-operating">
-                            <!-- Operating expenses will be rendered here -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer1">
                         </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Finance Costs</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer1-finance">
-                            <!-- Finance expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Capital Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer1-capital">
-                            <!-- Capital expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
                     <div class="flex justify-between items-center pt-3 mt-3 border-t border-red-300">
                         <span class="font-medium text-red-700">Total Annual Expenses:</span>
                         <span id="totalAnnualExpenses1" class="font-bold text-red-700 text-lg"></span>
@@ -420,16 +292,10 @@
                 </div>
             </div>
 
-            <!-- Property 2 Card -->
             <div id="propertyCard2" class="bg-white card p-6 flex flex-col h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">
-                        Investment Property 2 (Packham Street)
-                    </h2>
-                    <span id="property2Summary" class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800">
-                        Calculating...
-                    </span>
-                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Investment Property 2 (Packham Street)
+                </h2>
                 <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="isPPR2" class="form-checkbox h-5 w-5 text-yellow-600 rounded-md" />
@@ -488,12 +354,9 @@
                         <div class="mb-3">
                             <label for="landValuePercentage2" class="block text-gray-700 text-sm font-medium mb-2">
                                 Land Value Percentage (%)
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="tooltiptext">Percentage of property value attributed to land for tax calculations</span>
-                                </span>
                             </label>
                             <input type="text" id="landValuePercentage2" value="65" placeholder="e.g., 65" class="w-full p-2 border border-gray-300 rounded-md" />
+                            <p class="text-xs text-gray-500 mt-1">Percentage of property value attributed to land</p>
                         </div>
                         <div class="mt-3 space-y-1">
                             <p class="text-sm text-gray-600"><span class="font-medium">Monthly P&I:</span> <span id="monthlyPI2" class="font-semibold"></span></p>
@@ -511,29 +374,8 @@
                             + Add Custom
                         </button>
                     </h3>
-                    
-                    <!-- Expense Categories -->
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Operating Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 expense-grid" id="expensesContainer2-operating">
-                            <!-- Operating expenses will be rendered here -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2">
                         </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Finance Costs</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2-finance">
-                            <!-- Finance expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Capital Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2-capital">
-                            <!-- Capital expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
                     <div class="flex justify-between items-center pt-3 mt-3 border-t border-red-300">
                         <span class="font-medium text-red-700">Total Annual Expenses:</span>
                         <span id="totalAnnualExpenses2" class="font-bold text-red-700 text-lg"></span>
@@ -541,16 +383,10 @@
                 </div>
             </div>
 
-            <!-- Property 2a Card (Subdivided) -->
             <div id="propertyCard2a" class="bg-white card p-6 flex-col h-full hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">
-                        Subdivided Property 2a (Townhouse 1)
-                    </h2>
-                    <span id="property2aSummary" class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800">
-                        Calculating...
-                    </span>
-                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Subdivided Property 2a (Townhouse 1)
+                </h2>
                 <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="isPPR2a" class="form-checkbox h-5 w-5 text-yellow-600 rounded-md" disabled />
@@ -596,12 +432,9 @@
                         <div class="mb-3">
                             <label for="landValuePercentage2a" class="block text-gray-700 text-sm font-medium mb-2">
                                 Land Value Percentage (%)
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="tooltiptext">Percentage of property value attributed to land for tax calculations</span>
-                                </span>
                             </label>
                             <input type="text" id="landValuePercentage2a" value="65" placeholder="e.g., 65" class="w-full p-2 border border-gray-300 rounded-md" />
+                            <p class="text-xs text-gray-500 mt-1">Percentage of property value attributed to land</p>
                         </div>
                         <div class="mt-3 space-y-1">
                             <p class="text-sm text-gray-600"><span class="font-medium">Monthly P&I:</span> <span id="monthlyPI2a" class="font-semibold"></span></p>
@@ -619,29 +452,8 @@
                             + Add Custom
                         </button>
                     </h3>
-                    
-                    <!-- Expense Categories -->
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Operating Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 expense-grid" id="expensesContainer2a-operating">
-                            <!-- Operating expenses will be rendered here -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2a">
                         </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Finance Costs</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2a-finance">
-                            <!-- Finance expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Capital Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2a-capital">
-                            <!-- Capital expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
                     <div class="flex justify-between items-center pt-3 mt-3 border-t border-red-300">
                         <span class="font-medium text-red-700">Total Annual Expenses:</span>
                         <span id="totalAnnualExpenses2a" class="font-bold text-red-700 text-lg"></span>
@@ -649,16 +461,10 @@
                 </div>
             </div>
 
-            <!-- Property 2b Card (Subdivided) -->
             <div id="propertyCard2b" class="bg-white card p-6 flex-col h-full hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">
-                        Subdivided Property 2b (Townhouse 2)
-                    </h2>
-                    <span id="property2bSummary" class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800">
-                        Calculating...
-                    </span>
-                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Subdivided Property 2b (Townhouse 2)
+                </h2>
                 <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="isPPR2b" class="form-checkbox h-5 w-5 text-yellow-600 rounded-md" disabled />
@@ -704,12 +510,9 @@
                         <div class="mb-3">
                             <label for="landValuePercentage2b" class="block text-gray-700 text-sm font-medium mb-2">
                                 Land Value Percentage (%)
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="tooltiptext">Percentage of property value attributed to land for tax calculations</span>
-                                </span>
                             </label>
                             <input type="text" id="landValuePercentage2b" value="65" placeholder="e.g., 65" class="w-full p-2 border border-gray-300 rounded-md" />
+                            <p class="text-xs text-gray-500 mt-1">Percentage of property value attributed to land</p>
                         </div>
                         <div class="mt-3 space-y-1">
                             <p class="text-sm text-gray-600"><span class="font-medium">Monthly P&I:</span> <span id="monthlyPI2b" class="font-semibold"></span></p>
@@ -727,29 +530,8 @@
                             + Add Custom
                         </button>
                     </h3>
-                    
-                    <!-- Expense Categories -->
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Operating Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 expense-grid" id="expensesContainer2b-operating">
-                            <!-- Operating expenses will be rendered here -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2b">
                         </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Finance Costs</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2b-finance">
-                            <!-- Finance expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Capital Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer2b-capital">
-                            <!-- Capital expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
                     <div class="flex justify-between items-center pt-3 mt-3 border-t border-red-300">
                         <span class="font-medium text-red-700">Total Annual Expenses:</span>
                         <span id="totalAnnualExpenses2b" class="font-bold text-red-700 text-lg"></span>
@@ -757,16 +539,10 @@
                 </div>
             </div>
 
-            <!-- Property 3 Card -->
             <div id="propertyCard3" class="bg-white card p-6 flex flex-col h-full">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-gray-800">
-                        Investment Property 3 (Shawlands Avenue)
-                    </h2>
-                    <span id="property3Summary" class="text-sm font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-800">
-                        Calculating...
-                    </span>
-                </div>
+                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Investment Property 3 (Shawlands Avenue)
+                </h2>
                 <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                     <label class="flex items-center space-x-2 cursor-pointer">
                         <input type="checkbox" id="isPPR3" class="form-checkbox h-5 w-5 text-yellow-600 rounded-md" />
@@ -790,18 +566,18 @@
                             Month Sold (Financial Year starts July)
                         </label>
                         <select id="soldMonth3" class="w-full p-2 border border-gray-300 rounded-md disabled-input" disabled>
-                            <option value="0">July</option>
-                            <option value="1">August</option>
-                            <option value="2">September</option>
-                            <option value="3">October</option>
-                            <option value="4">November</option>
-                            <option value="5" selected>December</option>
-                            <option value="6">January</option>
-                            <option value="7">February</option>
-                            <option value="8">March</option>
-                            <option value="9">April</option>
-                            <option value="10">May</option>
-                            <option value="11">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December" selected>December</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
                         </select>
                     </div>
                 </div>
@@ -844,12 +620,9 @@
                         <div class="mb-3">
                             <label for="landValuePercentage3" class="block text-gray-700 text-sm font-medium mb-2">
                                 Land Value Percentage (%)
-                                <span class="tooltip">
-                                    <i class="fas fa-info-circle text-blue-500"></i>
-                                    <span class="tooltiptext">Percentage of property value attributed to land for tax calculations</span>
-                                </span>
                             </label>
                             <input type="text" id="landValuePercentage3" value="65" placeholder="e.g., 65" class="w-full p-2 border border-gray-300 rounded-md" />
+                            <p class="text-xs text-gray-500 mt-1">Percentage of property value attributed to land</p>
                         </div>
                         <div class="mt-3 space-y-1">
                             <p class="text-sm text-gray-600"><span class="font-medium">Monthly P&I:</span> <span id="monthlyPI3" class="font-semibold"></span></p>
@@ -867,29 +640,8 @@
                             + Add Custom
                         </button>
                     </h3>
-                    
-                    <!-- Expense Categories -->
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Operating Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 expense-grid" id="expensesContainer3-operating">
-                            <!-- Operating expenses will be rendered here -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer3">
                         </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Finance Costs</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer3-finance">
-                            <!-- Finance expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
-                    <div class="expense-category">
-                        <h4 class="expense-category-title">Capital Expenses</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="expensesContainer3-capital">
-                            <!-- Capital expenses will be rendered here -->
-                        </div>
-                    </div>
-                    
                     <div class="flex justify-between items-center pt-3 mt-3 border-t border-red-300">
                         <span class="font-medium text-red-700">Total Annual Expenses:</span>
                         <span id="totalAnnualExpenses3" class="font-bold text-red-700 text-lg"></span>
@@ -902,8 +654,166 @@
     <div class="w-full max-w-7xl">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center section-title">Calculation Results</h2>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 results-grid">
-            <!-- Results for each property will be displayed here -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div id="propertyResults1" class="result-card p-5 rounded-xl shadow-sm">
+                <h3 class="text-lg font-bold text-green-800 mb-3 text-center">Property 1 (Surrey Rd)</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Weekly Rent:</span>
+                        <span id="resWeeklyRent1" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Annual Rental Income:</span>
+                        <span id="resAnnualRentalIncome1" class="text-green-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Loan Amount:</span>
+                        <span id="resLoanAmount1" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Interest Rate:</span>
+                        <span id="resInterestRate1" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Total Expenses:</span>
+                        <span id="resTotalExpenses1" class="text-red-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" id="resNetRentalLoss1"></div>
+                    <div id="resNegativeGearingText1" class="text-center text-purple-600 text-base mt-3"></div>
+                    <div id="resTaxBenefit1" class="flex justify-between items-center text-base font-semibold text-orange-600 hidden">
+                        <span>Tax Benefit:</span>
+                        <span id="taxBenefitAmount1"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="propertyResults2" class="result-card p-5 rounded-xl shadow-sm">
+                <h3 class="text-lg font-bold text-green-800 mb-3 text-center">Property 2 (Packham Street)</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Weekly Rent:</span>
+                        <span id="resWeeklyRent2" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Annual Rental Income:</span>
+                        <span id="resAnnualRentalIncome2" class="text-green-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Loan Amount:</span>
+                        <span id="resLoanAmount2" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Interest Rate:</span>
+                        <span id="resInterestRate2" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Total Expenses:</span>
+                        <span id="resTotalExpenses2" class="text-red-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" id="resNetRentalLoss2"></div>
+                    <div id="resNegativeGearingText2" class="text-center text-purple-600 text-base mt-3"></div>
+                    <div id="resTaxBenefit2" class="flex justify-between items-center text-base font-semibold text-orange-600 hidden">
+                        <span>Tax Benefit:</span>
+                        <span id="taxBenefitAmount2"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="propertyResults2a" class="result-card p-5 rounded-xl shadow-sm hidden">
+                <h3 class="text-lg font-bold text-green-800 mb-3 text-center">Property 2a (Townhouse 1)</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Weekly Rent:</span>
+                        <span id="resWeeklyRent2a" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Annual Rental Income:</span>
+                        <span id="resAnnualRentalIncome2a" class="text-green-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Loan Amount:</span>
+                        <span id="resLoanAmount2a" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Interest Rate:</span>
+                        <span id="resInterestRate2a" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Total Expenses:</span>
+                        <span id="resTotalExpenses2a" class="text-red-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" id="resNetRentalLoss2a"></div>
+                    <div id="resNegativeGearingText2a" class="text-center text-purple-600 text-base mt-3"></div>
+                    <div id="resTaxBenefit2a" class="flex justify-between items-center text-base font-semibold text-orange-600 hidden">
+                        <span>Tax Benefit:</span>
+                        <span id="taxBenefitAmount2a"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="propertyResults2b" class="result-card p-5 rounded-xl shadow-sm hidden">
+                <h3 class="text-lg font-bold text-green-800 mb-3 text-center">Property 2b (Townhouse 2)</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Weekly Rent:</span>
+                        <span id="resWeeklyRent2b" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Annual Rental Income:</span>
+                        <span id="resAnnualRentalIncome2b" class="text-green-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Loan Amount:</span>
+                        <span id="resLoanAmount2b" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Interest Rate:</span>
+                        <span id="resInterestRate2b" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Total Expenses:</span>
+                        <span id="resTotalExpenses2b" class="text-red-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" id="resNetRentalLoss2b"></div>
+                    <div id="resNegativeGearingText2b" class="text-center text-purple-600 text-base mt-3"></div>
+                    <div id="resTaxBenefit2b" class="flex justify-between items-center text-base font-semibold text-orange-600 hidden">
+                        <span>Tax Benefit:</span>
+                        <span id="taxBenefitAmount2b"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="propertyResults3" class="result-card p-5 rounded-xl shadow-sm">
+                <h3 class="text-lg font-bold text-green-800 mb-3 text-center">Property 3 (Shawlands Avenue)</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Weekly Rent:</span>
+                        <span id="resWeeklyRent3" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Annual Rental Income:</span>
+                        <span id="resAnnualRentalIncome3" class="text-green-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Loan Amount:</span>
+                        <span id="resLoanAmount3" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Interest Rate:</span>
+                        <span id="resInterestRate3" class="font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-medium">Total Expenses:</span>
+                        <span id="resTotalExpenses3" class="text-red-600 font-semibold text-lg"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-3" id="resNetRentalLoss3"></div>
+                    <div id="resNegativeGearingText3" class="text-center text-purple-600 text-base mt-3"></div>
+                    <div id="resTaxBenefit3" class="flex justify-between items-center text-base font-semibold text-orange-600 hidden">
+                        <span>Tax Benefit:</span>
+                        <span id="taxBenefitAmount3"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="summary-card p-6 rounded-xl mb-8">
@@ -986,42 +896,19 @@
     <footer class="mt-8 text-center text-gray-600 text-sm w-full max-w-7xl">
         <div class="border-t border-gray-200 pt-4">
             <p>Property Negative Gearing Calculator &copy; 2025 | This tool provides estimates only. Consult a financial advisor for professional advice.</p>
-            <p class="mt-2"><i class="fas fa-exclamation-triangle text-yellow-500"></i> Note: Land tax is calculated per property. In reality, it is based on total land holdings.</p>
         </div>
     </footer>
 
     <script>
         // Helper function to safely parse float values
         const parseNumber = (value) => {
-            if (typeof value === 'string') {
-                // Remove commas and any non-numeric characters except decimal point
-                value = value.replace(/[^0-9.]/g, '');
-            }
             const num = parseFloat(value);
             return isNaN(num) ? 0 : num;
         };
 
         // Helper to format currency
         const formatCurrency = (value) => {
-            return '$' + value.toLocaleString(undefined, { 
-                minimumFractionDigits: 0, 
-                maximumFractionDigits: 0 
-            });
-        };
-
-        // Helper to format percentage
-        const formatPercentage = (value) => {
-            return value.toFixed(2) + '%';
-        };
-
-        // Function to show loading overlay
-        const showLoading = () => {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-        };
-
-        // Function to hide loading overlay
-        const hideLoading = () => {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+            return '$' + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         };
 
         // Function to calculate the marginal tax rate based on Australian tax brackets (2025-2026 financial year)
@@ -1032,10 +919,10 @@
             if (income <= 18200) {
                 taxRate = 0;
             } else if (income <= 45000) {
-                taxRate = 0.19;
-            } else if (income <= 120000) {
-                taxRate = 0.325;
-            } else if (income <= 180000) {
+                taxRate = 0.16;
+            } else if (income <= 135000) {
+                taxRate = 0.30;
+            } else if (income <= 190000) {
                 taxRate = 0.37;
             } else {
                 taxRate = 0.45;
@@ -1044,171 +931,152 @@
         };
 
         // Function to calculate mortgage amortization
-        const calculateMortgageAmortization = (principal, annualInterestRate, loanTermYears = 30) => {
+        const calculateMortgageAmortization = (principal, annualInterestRate, loanTermYears = 30, numYearsToProject = 5) => {
             const amortizationSchedule = [];
             if (principal <= 0 || annualInterestRate < 0 || loanTermYears <= 0) {
+                for (let i = 0; i < numYearsToProject; i++) {
+                    amortizationSchedule.push({ monthlyPayment: 0, annualInterest: 0, annualPrincipal: 0, remainingBalance: 0 });
+                }
                 return amortizationSchedule;
             }
 
             const monthlyInterestRate = (annualInterestRate / 100) / 12;
             const numberOfPayments = loanTermYears * 12;
 
-            // Calculate monthly payment using formula
-            const monthlyPayment = monthlyInterestRate === 0 
-                ? principal / numberOfPayments
-                : principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments) / 
-                  (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
-
-            let remainingBalance = principal;
-
-            for (let year = 0; year < loanTermYears; year++) {
-                let annualInterest = 0;
-                let annualPrincipal = 0;
-
-                for (let month = 0; month < 12; month++) {
-                    if (remainingBalance <= 0) break;
-                    
-                    const monthlyInterest = remainingBalance * monthlyInterestRate;
-                    const monthlyPrincipal = monthlyPayment - monthlyInterest;
-                    
-                    annualInterest += monthlyInterest;
-                    annualPrincipal += monthlyPrincipal;
-                    remainingBalance -= monthlyPrincipal;
-                }
-
-                amortizationSchedule.push({
-                    year: year + 1,
-                    annualInterest: annualInterest,
-                    annualPrincipal: annualPrincipal,
-                    remainingBalance: remainingBalance
-                });
-
-                if (remainingBalance <= 0) break;
+            let monthlyPayment;
+            if (monthlyInterestRate === 0) {
+                monthlyPayment = principal / numberOfPayments;
+            } else {
+                monthlyPayment = principal * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
             }
 
+            let currentRemainingBalance = principal;
+
+            for (let year = 0; year < numYearsToProject; year++) {
+                let annualInterestAccrued = 0;
+                let annualPrincipalPaid = 0;
+
+                for (let month = 0; month < 12; month++) {
+                    if (currentRemainingBalance <= 0) {
+                        currentRemainingBalance = 0;
+                        break;
+                    }
+                    const interestThisMonth = currentRemainingBalance * monthlyInterestRate;
+                    const principalThisMonth = Math.min(monthlyPayment - interestThisMonth, currentRemainingBalance);
+
+                    annualInterestAccrued += interestThisMonth;
+                    annualPrincipalPaid += principalThisMonth;
+                    currentRemainingBalance -= principalThisMonth;
+                }
+                const yearResult = {
+                    monthlyPayment: monthlyPayment,
+                    annualInterest: annualInterestAccrued,
+                    annualPrincipal: annualPrincipalPaid,
+                    remainingBalance: Math.max(0, currentRemainingBalance)
+                };
+                amortizationSchedule.push(yearResult);
+            }
             return amortizationSchedule;
         };
 
         // Function to calculate Land Tax based on SRO Victoria 2024 General Rates
         const calculateLandTax = (landValue) => {
-            // If land value is below threshold, no tax
             if (landValue <= 300000) {
                 return 0;
-            } 
-            // Apply progressive tax rates
-            else if (landValue <= 600000) {
+            } else if (landValue <= 600000) {
                 return 275 + 0.002 * (landValue - 300000);
-            } 
-            else if (landValue <= 1000000) {
+            } else if (landValue <= 1000000) {
                 return 875 + 0.003 * (landValue - 600000);
-            } 
-            else if (landValue <= 1800000) {
+            } else if (landValue <= 1800000) {
                 return 2075 + 0.005 * (landValue - 1000000);
-            } 
-            else if (landValue <= 3000000) {
+            } else if (landValue <= 3000000) {
                 return 6075 + 0.007 * (landValue - 1800000);
-            } 
-            else {
-                return 6075 + 0.007 * (3000000 - 1800000) + 0.009 * (landValue - 3000000);
+            } else if (landValue <= 4500000) {
+                return 14475 + 0.009 * (landValue - 3000000);
+            } else if (landValue <= 6000000) {
+                return 27975 + 0.012 * (landValue - 4500000);
+            } else if (landValue <= 9000000) {
+                return 45975 + 0.015 * (landValue - 6000000);
+            } else if (landValue <= 15000000) {
+                return 90975 + 0.018 * (landValue - 9000000);
+            } else if (landValue <= 25000000) {
+                return 198975 + 0.020 * (landValue - 15000000);
+            } else {
+                return 398975 + 0.0225 * (landValue - 25000000);
             }
         };
 
-        // Default expenses configuration with categories and expense types
+        // Default expenses configuration
         const defaultExpenses = {
             '1': [
-                // Operating Expenses
-                { id: 'councilRates1', label: 'Council Rates', value: 2500, category: 'operating', type: 'cash' },
-                { id: 'waterRates1', label: 'Water Rates', value: 800, category: 'operating', type: 'cash' },
-                { id: 'bodyCorporateFees1', label: 'Body Corporate Fees', value: 2000, category: 'operating', type: 'cash' },
-                { id: 'propertyManagementFees1', label: 'Property Management Fees (5.5%)', value: 0, category: 'operating', type: 'cash', isAgentFee: true },
-                { id: 'annualMaintenance1', label: 'Annual Maintenance', value: 500, category: 'operating', type: 'cash' },
-                { id: 'insurance1', label: 'Insurance', value: 1200, category: 'operating', type: 'cash' },
-                { id: 'gardening1', label: 'Gardening/Lawn Mowing', value: 400, category: 'operating', type: 'cash' },
-                { id: 'emergencyHomeAssistance1', label: 'Emergency Home Assistance', value: 400, category: 'operating', type: 'cash' },
-                { id: 'complianceCheck1', label: 'Compliance Check', value: 400, category: 'operating', type: 'cash' },
-                
-                // Finance Costs
-                { id: 'loanApplicationFees1', label: 'Loan Fees', value: 0, category: 'finance', type: 'cash' },
-                
-                // Capital Expenses
-                { id: 'landTax1', label: 'Land Tax', value: 0, category: 'capital', type: 'cash', isLandTax: true },
-                { id: 'depreciation1', label: 'Depreciation', value: 0, category: 'capital', type: 'non-cash', isDepreciation: true }
+                { id: 'councilRates1', label: 'Council Rates ($)', value: 2500 },
+                { id: 'waterRates1', label: 'Water Rates ($)', value: 800 },
+                { id: 'landTax1', label: 'Land Tax ($)', value: 0, isLandTax: true }, // Value will be calculated
+                { id: 'bodyCorporateFees1', label: 'Body Corporate Fees ($)', value: 2000 },
+                { id: 'propertyManagementFees1', label: 'Property Management Fees (5.5% of Rent)', value: 0, isAgentFee: true },
+                { id: 'annualMaintenance1', label: 'Annual Maintenance ($)', value: 500 },
+                { id: 'insurance1', label: 'Insurance ($)', value: 1200 },
+                { id: 'gardening1', label: 'Gardening/Lawn Mowing ($)', value: 400 },
+                { id: 'emergencyHomeAssistance1', label: 'Emergency Home Assistance ($)', value: 400 },
+                { id: 'complianceCheck1', label: 'Compliance Check ($)', value: 400 },
+                { id: 'depreciation1', label: 'Depreciation ($)', value: 0, isDepreciation: true },
+                { id: 'loanApplicationFees1', label: 'Loan Fees ($)', value: 0 }
             ],
             '2': [
-                // Operating Expenses
-                { id: 'councilRates2', label: 'Council Rates', value: 3500, category: 'operating', type: 'cash' },
-                { id: 'waterRates2', label: 'Water Rates', value: 700, category: 'operating', type: 'cash' },
-                { id: 'bodyCorporateFees2', label: 'Body Corporate Fees', value: 0, category: 'operating', type: 'cash' },
-                { id: 'propertyManagementFees2', label: 'Property Management Fees (5.5%)', value: 0, category: 'operating', type: 'cash', isAgentFee: true },
-                { id: 'annualMaintenance2', label: 'Annual Maintenance', value: 500, category: 'operating', type: 'cash' },
-                { id: 'insurance2', label: 'Insurance', value: 1100, category: 'operating', type: 'cash' },
-                { id: 'gardening2', label: 'Gardening/Lawn Mowing', value: 350, category: 'operating', type: 'cash' },
-                { id: 'emergencyHomeAssistance2', label: 'Emergency Home Assistance', value: 400, category: 'operating', type: 'cash' },
-                { id: 'complianceCheck2', label: 'Compliance Check', value: 400, category: 'operating', type: 'cash' },
-                
-                // Finance Costs
-                { id: 'loanApplicationFees2', label: 'Loan Fees', value: 0, category: 'finance', type: 'cash' },
-                
-                // Capital Expenses
-                { id: 'landTax2', label: 'Land Tax', value: 0, category: 'capital', type: 'cash', isLandTax: true },
-                { id: 'depreciation2', label: 'Depreciation', value: 0, category: 'capital', type: 'non-cash', isDepreciation: true }
+                { id: 'councilRates2', label: 'Council Rates ($)', value: 3500 },
+                { id: 'waterRates2', label: 'Water Rates ($)', value: 700 },
+                { id: 'landTax2', label: 'Land Tax ($)', value: 0, isLandTax: true }, // Value will be calculated
+                { id: 'bodyCorporateFees2', label: 'Body Corporate Fees ($)', value: 0 },
+                { id: 'propertyManagementFees2', label: 'Property Management Fees (5.5% of Rent)', value: 0, isAgentFee: true },
+                { id: 'annualMaintenance2', label: 'Annual Maintenance ($)', value: 500 },
+                { id: 'insurance2', label: 'Insurance ($)', value: 1100 },
+                { id: 'gardening2', label: 'Gardening/Lawn Mowing ($)', value: 350 },
+                { id: 'emergencyHomeAssistance2', label: 'Emergency Home Assistance ($)', value: 400 },
+                { id: 'complianceCheck2', label: 'Compliance Check ($)', value: 400 },
+                { id: 'depreciation2', label: 'Depreciation ($)', value: 0, isDepreciation: true },
+                { id: 'loanApplicationFees2', label: 'Loan Fees ($)', value: 0 }
             ],
             '2a': [
-                // Operating Expenses
-                { id: 'councilRates2a', label: 'Council Rates', value: 1750, category: 'operating', type: 'cash' },
-                { id: 'waterRates2a', label: 'Water Rates', value: 350, category: 'operating', type: 'cash' },
-                { id: 'bodyCorporateFees2a', label: 'Body Corporate Fees', value: 0, category: 'operating', type: 'cash' },
-                { id: 'propertyManagementFees2a', label: 'Property Management Fees (5.5%)', value: 0, category: 'operating', type: 'cash', isAgentFee: true },
-                { id: 'annualMaintenance2a', label: 'Annual Maintenance', value: 250, category: 'operating', type: 'cash' },
-                { id: 'insurance2a', label: 'Insurance', value: 550, category: 'operating', type: 'cash' },
-                { id: 'gardening2a', label: 'Gardening/Lawn Mowing', value: 175, category: 'operating', type: 'cash' },
-                { id: 'emergencyHomeAssistance2a', label: 'Emergency Home Assistance', value: 200, category: 'operating', type: 'cash' },
-                { id: 'complianceCheck2a', label: 'Compliance Check', value: 200, category: 'operating', type: 'cash' },
-                
-                // Finance Costs
-                { id: 'loanApplicationFees2a', label: 'Loan Fees', value: 0, category: 'finance', type: 'cash' },
-                
-                // Capital Expenses
-                { id: 'landTax2a', label: 'Land Tax', value: 0, category: 'capital', type: 'cash', isLandTax: true },
-                { id: 'depreciation2a', label: 'Depreciation', value: 0, category: 'capital', type: 'non-cash', isDepreciation: true }
+                { id: 'councilRates2a', label: 'Council Rates ($)', value: 1750 },
+                { id: 'waterRates2a', label: 'Water Rates ($)', value: 350 },
+                { id: 'landTax2a', label: 'Land Tax ($)', value: 0, isLandTax: true }, // Value will be calculated
+                { id: 'bodyCorporateFees2a', label: 'Body Corporate Fees ($)', value: 0 },
+                { id: 'propertyManagementFees2a', label: 'Property Management Fees (5.5% of Rent)', value: 0, isAgentFee: true },
+                { id: 'annualMaintenance2a', label: 'Annual Maintenance ($)', value: 250 },
+                { id: 'insurance2a', label: 'Insurance ($)', value: 550 },
+                { id: 'gardening2a', label: 'Gardening/Lawn Mowing ($)', value: 175 },
+                { id: 'emergencyHomeAssistance2a', label: 'Emergency Home Assistance ($)', value: 200 },
+                { id: 'complianceCheck2a', label: 'Compliance Check ($)', value: 200 },
+                { id: 'depreciation2a', label: 'Depreciation ($)', value: 0, isDepreciation: true },
+                { id: 'loanApplicationFees2a', label: 'Loan Fees ($)', value: 0 }
             ],
             '2b': [
-                // Operating Expenses
-                { id: 'councilRates2b', label: 'Council Rates', value: 1750, category: 'operating', type: 'cash' },
-                { id: 'waterRates2b', label: 'Water Rates', value: 350, category: 'operating', type: 'cash' },
-                { id: 'bodyCorporateFees2b', label: 'Body Corporate Fees', value: 0, category: 'operating', type: 'cash' },
-                { id: 'propertyManagementFees2b', label: 'Property Management Fees (5.5%)', value: 0, category: 'operating', type: 'cash', isAgentFee: true },
-                { id: 'annualMaintenance2b', label: 'Annual Maintenance', value: 250, category: 'operating', type: 'cash' },
-                { id: 'insurance2b', label: 'Insurance', value: 550, category: 'operating', type: 'cash' },
-                { id: 'gardening2b', label: 'Gardening/Lawn Mowing', value: 175, category: 'operating', type: 'cash' },
-                { id: 'emergencyHomeAssistance2b', label: 'Emergency Home Assistance', value: 200, category: 'operating', type: 'cash' },
-                { id: 'complianceCheck2b', label: 'Compliance Check', value: 200, category: 'operating', type: 'cash' },
-                
-                // Finance Costs
-                { id: 'loanApplicationFees2b', label: 'Loan Fees', value: 0, category: 'finance', type: 'cash' },
-                
-                // Capital Expenses
-                { id: 'landTax2b', label: 'Land Tax', value: 0, category: 'capital', type: 'cash', isLandTax: true },
-                { id: 'depreciation2b', label: 'Depreciation', value: 0, category: 'capital', type: 'non-cash', isDepreciation: true }
+                { id: 'councilRates2b', label: 'Council Rates ($)', value: 1750 },
+                { id: 'waterRates2b', label: 'Water Rates ($)', value: 350 },
+                { id: 'landTax2b', label: 'Land Tax ($)', value: 0, isLandTax: true }, // Value will be calculated
+                { id: 'bodyCorporateFees2b', label: 'Body Corporate Fees ($)', value: 0 },
+                { id: 'propertyManagementFees2b', label: 'Property Management Fees (5.5% of Rent)', value: 0, isAgentFee: true },
+                { id: 'annualMaintenance2b', label: 'Annual Maintenance ($)', value: 250 },
+                { id: 'insurance2b', label: 'Insurance ($)', value: 550 },
+                { id: 'gardening2b', label: 'Gardening/Lawn Mowing ($)', value: 175 },
+                { id: 'emergencyHomeAssistance2b', label: 'Emergency Home Assistance ($)', value: 200 },
+                { id: 'complianceCheck2b', label: 'Compliance Check ($)', value: 200 },
+                { id: 'depreciation2b', label: 'Depreciation ($)', value: 0, isDepreciation: true },
+                { id: 'loanApplicationFees2b', label: 'Loan Fees ($)', value: 0 }
             ],
             '3': [
-                // Operating Expenses
-                { id: 'councilRates3', label: 'Council Rates', value: 3800, category: 'operating', type: 'cash' },
-                { id: 'waterRates3', label: 'Water Rates', value: 750, category: 'operating', type: 'cash' },
-                { id: 'bodyCorporateFees3', label: 'Body Corporate Fees', value: 0, category: 'operating', type: 'cash' },
-                { id: 'propertyManagementFees3', label: 'Property Management Fees (5.5%)', value: 0, category: 'operating', type: 'cash', isAgentFee: true },
-                { id: 'annualMaintenance3', label: 'Annual Maintenance', value: 500, category: 'operating', type: 'cash' },
-                { id: 'insurance3', label: 'Insurance', value: 1150, category: 'operating', type: 'cash' },
-                { id: 'gardening3', label: 'Gardening/Lawn Mowing', value: 380, category: 'operating', type: 'cash' },
-                { id: 'emergencyHomeAssistance3', label: 'Emergency Home Assistance', value: 400, category: 'operating', type: 'cash' },
-                { id: 'complianceCheck3', label: 'Compliance Check', value: 400, category: 'operating', type: 'cash' },
-                
-                // Finance Costs
-                { id: 'loanApplicationFees3', label: 'Loan Fees', value: 0, category: 'finance', type: 'cash' },
-                
-                // Capital Expenses
-                { id: 'landTax3', label: 'Land Tax', value: 0, category: 'capital', type: 'cash', isLandTax: true },
-                { id: 'depreciation3', label: 'Depreciation', value: 70000, category: 'capital', type: 'non-cash', isDepreciation: true }
+                { id: 'councilRates3', label: 'Council Rates ($)', value: 3800 },
+                { id: 'waterRates3', label: 'Water Rates ($)', value: 750 },
+                { id: 'landTax3', label: 'Land Tax ($)', value: 0, isLandTax: true }, // Value will be calculated
+                { id: 'bodyCorporateFees3', label: 'Body Corporate Fees ($)', value: 0 },
+                { id: 'propertyManagementFees3', label: 'Property Management Fees (5.5% of Rent)', value: 0, isAgentFee: true },
+                { id: 'annualMaintenance3', label: 'Annual Maintenance ($)', value: 500 },
+                { id: 'insurance3', label: 'Insurance ($)', value: 1150 },
+                { id: 'gardening3', label: 'Gardening/Lawn Mowing ($)', value: 380 },
+                { id: 'emergencyHomeAssistance3', label: 'Emergency Home Assistance ($)', value: 400 },
+                { id: 'complianceCheck3', label: 'Compliance Check ($)', value: 400 },
+                { id: 'depreciation3', label: 'Depreciation ($)', value: 70000, isDepreciation: true },
+                { id: 'loanApplicationFees3', label: 'Loan Fees ($)', value: 0 }
             ]
         };
 
@@ -1216,68 +1084,40 @@
 
         // Function to render/re-render expense inputs for a given property
         const renderExpenses = (propertyId) => {
-            const operatingContainer = document.getElementById(`expensesContainer${propertyId}-operating`);
-            const financeContainer = document.getElementById(`expensesContainer${propertyId}-finance`);
-            const capitalContainer = document.getElementById(`expensesContainer${propertyId}-capital`);
-            
-            if (!operatingContainer || !financeContainer || !capitalContainer) return;
+            const expensesContainer = document.getElementById(`expensesContainer${propertyId}`);
+            if (!expensesContainer) return;
 
-            // Clear existing inputs
-            operatingContainer.innerHTML = '';
-            financeContainer.innerHTML = '';
-            capitalContainer.innerHTML = '';
+            expensesContainer.innerHTML = ''; // Clear existing inputs
 
             currentExpenses[propertyId].forEach(expense => {
+                const expenseDiv = document.createElement('div');
+                expenseDiv.className = 'expense-item relative';
+
                 let inputValue = expense.value;
-                
-                // Calculate agent fee if needed
+                // If it's an agent fee, calculate its default value based on current weekly rent
                 if (expense.isAgentFee) {
                     const weeklyRentInputId = `weeklyRent${propertyId}`;
                     const weeklyRent = parseNumber(document.getElementById(weeklyRentInputId)?.value || 0);
                     inputValue = weeklyRent * 52 * 0.055; // 5.5% of annual rent
-                    expense.value = inputValue; // Update the value
-                } 
-                // Calculate land tax if needed
-                else if (expense.isLandTax) {
+                    // Update the value in currentExpenses so it's saved/loaded correctly
+                    expense.value = inputValue; 
+                } else if (expense.isLandTax) {
                     const propertyValue = parseNumber(document.getElementById(`propertyValue${propertyId}`)?.value || 0);
                     const landValuePercentage = parseNumber(document.getElementById(`landValuePercentage${propertyId}`)?.value || 0);
                     const landValue = propertyValue * (landValuePercentage / 100);
                     inputValue = calculateLandTax(landValue);
-                    expense.value = inputValue; // Update the value
+                    expense.value = inputValue; // Update the value in currentExpenses
                 }
 
-                const expenseDiv = document.createElement('div');
-                expenseDiv.className = 'expense-item relative';
-                
-                let typeBadge = '';
-                if (expense.type === 'cash') {
-                    typeBadge = '<span class="expense-type-badge cash-expense">Cash</span>';
-                } else if (expense.type === 'non-cash') {
-                    typeBadge = '<span class="expense-type-badge non-cash-expense">Non-Cash</span>';
-                }
-                
+
                 expenseDiv.innerHTML = `
-                    <label for="${expense.id}" class="block text-gray-700 text-sm font-medium mb-1">
-                        ${expense.label} ${typeBadge}
-                    </label>
-                    <input type="text" id="${expense.id}" value="${inputValue.toFixed(0)}" placeholder="0" class="w-full p-2 border border-gray-300 rounded-md" data-expense-name="${expense.label}" data-is-depreciation="${expense.isDepreciation || false}" data-is-land-tax="${expense.isLandTax || false}" />
+                    <label for="${expense.id}" class="block text-gray-700 text-sm font-medium mb-1">${expense.label}</label>
+                    <input type="text" id="${expense.id}" value="${inputValue.toFixed(2)}" placeholder="0" class="w-full p-2 border border-gray-300 rounded-md" data-expense-name="${expense.label}" data-is-depreciation="${expense.isDepreciation || false}" data-is-land-tax="${expense.isLandTax || false}" />
                     <button type="button" class="remove-expense-btn" data-expense-id="${expense.id}">&times;</button>
                 `;
-                
-                // Add to appropriate container based on category
-                switch(expense.category) {
-                    case 'operating':
-                        operatingContainer.appendChild(expenseDiv);
-                        break;
-                    case 'finance':
-                        financeContainer.appendChild(expenseDiv);
-                        break;
-                    case 'capital':
-                        capitalContainer.appendChild(expenseDiv);
-                        break;
-                }
+                expensesContainer.appendChild(expenseDiv);
 
-                // Add event listeners
+                // Add event listeners for the new input and remove button
                 const inputElement = expenseDiv.querySelector(`#${expense.id}`);
                 inputElement.addEventListener('input', calculateAll);
 
@@ -1285,8 +1125,8 @@
                 removeButton.addEventListener('click', (event) => {
                     const expenseToRemoveId = event.target.dataset.expenseId;
                     currentExpenses[propertyId] = currentExpenses[propertyId].filter(e => e.id !== expenseToRemoveId);
-                    renderExpenses(propertyId);
-                    calculateAll();
+                    renderExpenses(propertyId); // Re-render to remove the item
+                    calculateAll(); // Recalculate after removal
                 });
             });
         };
@@ -1294,140 +1134,171 @@
         // Function to add a custom expense input field
         const addCustomExpenseField = (propertyId) => {
             const uniqueId = `customExpense${propertyId}_${Date.now()}`;
-            currentExpenses[propertyId].push({ 
-                id: uniqueId, 
-                label: 'Custom Expense', 
-                value: 0, 
-                category: 'operating', 
-                type: 'cash',
-                isCustom: true 
-            });
-            renderExpenses(propertyId);
-            calculateAll();
+            currentExpenses[propertyId].push({ id: uniqueId, label: 'Custom Expense ($)', value: 0, isCustom: true });
+            renderExpenses(propertyId); // Re-render to include the new item
+            calculateAll(); // Recalculate after adding
         };
 
         // Function to calculate individual property details
         const calculateProperty = (propertyId) => {
-            showLoading();
-            
-            try {
-                const isPPR = document.getElementById(`isPPR${propertyId}`).checked;
-                const isSold = document.getElementById(`isSold${propertyId}`) ? document.getElementById(`isSold${propertyId}`).checked : false;
-                const soldMonth = isSold ? parseInt(document.getElementById(`soldMonth${propertyId}`).value) : 0;
-                const monthsActive = isSold ? (soldMonth + 1) : 12; // Number of months property was active in Year 1
+            const isPPR = document.getElementById(`isPPR${propertyId}`).checked;
+            const isSold = document.getElementById(`isSold${propertyId}`) ? document.getElementById(`isSold${propertyId}`).checked : false;
+            const soldMonthIndex = isSold ? document.getElementById(`soldMonth${propertyId}`).selectedIndex : 11; // 0-indexed, Dec is 5, June is 11
+            const monthsActive = isSold ? (soldMonthIndex + 1) : 12; // Number of months property was active in Year 1
 
-                const weeklyRent = parseNumber(document.getElementById(`weeklyRent${propertyId}`).value);
-                const loanAmount = parseNumber(document.getElementById(`loanAmount${propertyId}`).value);
-                const interestRate = parseNumber(document.getElementById(`interestRate${propertyId}`).value);
-                const propertyValue = parseNumber(document.getElementById(`propertyValue${propertyId}`).value);
-                const landValuePercentage = parseNumber(document.getElementById(`landValuePercentage${propertyId}`).value);
-                const landValue = propertyValue * (landValuePercentage / 100);
+            const weeklyRent = parseNumber(document.getElementById(`weeklyRent${propertyId}`).value);
+            const loanAmount = parseNumber(document.getElementById(`loanAmount${propertyId}`).value);
+            const interestRate = parseNumber(document.getElementById(`interestRate${propertyId}`).value);
+            const propertyValue = parseNumber(document.getElementById(`propertyValue${propertyId}`).value); // Get property value
+            const landValuePercentage = parseNumber(document.getElementById(`landValuePercentage${propertyId}`).value);
+            const landValue = propertyValue * (landValuePercentage / 100);
 
-                // Calculate annual rental income
-                const annualRentalIncome = weeklyRent * 52;
 
-                // Calculate loan amortization for 30 years
-                const loanAmortization = calculateMortgageAmortization(loanAmount, interestRate, 30);
-                const currentYearAmortization = loanAmortization[0] || { annualInterest: 0, annualPrincipal: 0 };
+            const annualRentalIncome = weeklyRent * 52;
 
-                const monthlyPI = (currentYearAmortization.annualInterest + currentYearAmortization.annualPrincipal) / 12;
-                const annualPI = monthlyPI * 12;
-                const deductibleInterest = currentYearAmortization.annualInterest;
-                const annualPrincipalPaid = currentYearAmortization.annualPrincipal;
+            // Calculate loan amortization for 5 years
+            const loanAmortization = calculateMortgageAmortization(loanAmount, interestRate, 30, 5);
+            const currentYearAmortization = loanAmortization[0] || { monthlyPayment: 0, annualInterest: 0, annualPrincipal: 0 };
 
-                let totalFixedExpenses = 0;
-                let totalActualExpensesExcludingDepreciation = 0;
-                let totalCashExpenses = 0;
+            const monthlyPI = currentYearAmortization.monthlyPayment;
+            const annualPI = monthlyPI * 12;
+            const deductibleInterest = currentYearAmortization.annualInterest;
+            const annualPrincipalPaid = currentYearAmortization.annualPrincipal;
 
-                // Get values from rendered expense inputs
-                const expenseInputs = document.querySelectorAll(`#propertyCard${propertyId} input[type="text"]`);
-                expenseInputs.forEach(input => {
-                    const expenseValue = parseNumber(input.value);
-                    totalFixedExpenses += expenseValue;
-                    
-                    // Exclude depreciation from cash expenses
-                    if (input.dataset.isDepreciation !== 'true') {
-                        totalActualExpensesExcludingDepreciation += expenseValue;
-                    }
-                    
-                    // Track cash expenses separately
-                    if (input.dataset.isDepreciation !== 'true' && input.dataset.isLandTax !== 'true') {
-                        totalCashExpenses += expenseValue;
-                    }
-                });
+            let totalFixedExpenses = 0; // All expenses including depreciation
+            let totalActualExpensesExcludingDepreciation = 0; // For overall cash flow calculation
 
-                // Update total annual expenses display
-                document.getElementById(`totalAnnualExpenses${propertyId}`).textContent = formatCurrency(totalFixedExpenses);
-
-                // Adjust for sold property
-                let adjustedAnnualRentalIncome = annualRentalIncome;
-                let adjustedTotalFixedExpenses = totalFixedExpenses;
-                let adjustedDeductibleInterest = deductibleInterest;
-                let adjustedAnnualPrincipalPaid = annualPrincipalPaid;
-                let adjustedTotalActualExpensesExcludingDepreciation = totalActualExpensesExcludingDepreciation;
-                let adjustedTotalCashExpenses = totalCashExpenses;
-
-                if (isSold) {
-                    const fraction = monthsActive / 12;
-                    adjustedAnnualRentalIncome = annualRentalIncome * fraction;
-                    adjustedTotalFixedExpenses = totalFixedExpenses * fraction;
-                    adjustedDeductibleInterest = deductibleInterest * fraction;
-                    adjustedAnnualPrincipalPaid = annualPrincipalPaid * fraction;
-                    adjustedTotalActualExpensesExcludingDepreciation = totalActualExpensesExcludingDepreciation * fraction;
-                    adjustedTotalCashExpenses = totalCashExpenses * fraction;
+            // Get values from rendered expense inputs
+            const expenseInputs = document.querySelectorAll(`#expensesContainer${propertyId} input[type="text"]`);
+            expenseInputs.forEach(input => {
+                const expenseValue = parseNumber(input.value);
+                totalFixedExpenses += expenseValue;
+                if (input.dataset.isDepreciation !== 'true') { // Check if it's not a depreciation expense
+                    totalActualExpensesExcludingDepreciation += expenseValue;
                 }
+            });
 
-                // Calculate property cash flow (before tax)
-                const cashFlowBeforeTax = adjustedAnnualRentalIncome - adjustedTotalCashExpenses - adjustedDeductibleInterest - adjustedAnnualPrincipalPaid;
+            // Update total annual expenses display on the property card
+            document.getElementById(`totalAnnualExpenses${propertyId}`).textContent = formatCurrency(totalFixedExpenses);
 
-                // Calculate net rental income/loss for tax purposes
-                const netRentalIncomeLoss = adjustedAnnualRentalIncome - (adjustedTotalFixedExpenses + adjustedDeductibleInterest);
+            // Adjust income and expenses for 'sold' property for Year 1
+            let adjustedAnnualRentalIncome = annualRentalIncome;
+            let adjustedTotalFixedExpenses = totalFixedExpenses; // Total expenses for the property card display
+            let adjustedTotalDeductibleExpenses = totalFixedExpenses + deductibleInterest; // For negative gearing calculation
+            let adjustedDeductibleInterest = deductibleInterest;
+            let adjustedAnnualPrincipalPaid = annualPrincipalPaid;
+            let adjustedTotalActualExpensesExcludingDepreciation = totalActualExpensesExcludingDepreciation;
 
-                // Update UI
-                document.getElementById(`annualRentalIncome${propertyId}`).textContent = formatCurrency(annualRentalIncome);
-                document.getElementById(`monthlyPI${propertyId}`).textContent = formatCurrency(monthlyPI);
-                document.getElementById(`annualPI${propertyId}`).textContent = formatCurrency(annualPI);
-                document.getElementById(`deductibleInterest${propertyId}`).textContent = formatCurrency(deductibleInterest);
-                document.getElementById(`annualPrincipalPaid${propertyId}`).textContent = formatCurrency(annualPrincipalPaid);
 
-                // Update property summary badge
-                const summaryEl = document.getElementById(`property${propertyId}Summary`);
-                if (summaryEl) {
-                    summaryEl.textContent = formatCurrency(cashFlowBeforeTax);
-                    summaryEl.className = `text-sm font-semibold px-3 py-1 rounded-full ${
-                        cashFlowBeforeTax < 0 ? 'bg-red-100 text-red-800' : 
-                        cashFlowBeforeTax > 0 ? 'bg-green-100 text-green-800' : 
-                        'bg-blue-100 text-blue-800'
-                    }`;
-                }
-
-                return {
-                    propertyId,
-                    isPPR,
-                    isSold,
-                    monthsActive,
-                    weeklyRent,
-                    annualRentalIncome,
-                    loanAmount,
-                    interestRate,
-                    propertyValue,
-                    landValuePercentage,
-                    landValue,
-                    monthlyPI,
-                    annualPI,
-                    deductibleInterest,
-                    annualPrincipalPaid,
-                    totalFixedExpenses,
-                    totalActualExpensesExcludingDepreciation,
-                    netRentalIncomeLoss,
-                    loanAmortization
-                };
-            } catch (error) {
-                console.error(`Error calculating property ${propertyId}:`, error);
-                return null;
-            } finally {
-                hideLoading();
+            if (isSold) {
+                adjustedAnnualRentalIncome = (annualRentalIncome / 12) * monthsActive;
+                adjustedTotalFixedExpenses = (totalFixedExpenses / 12) * monthsActive; // Adjusted for display on card
+                adjustedDeductibleInterest = (deductibleInterest / 12) * monthsActive;
+                adjustedTotalDeductibleExpenses = adjustedTotalFixedExpenses + adjustedDeductibleInterest; // Adjusted for negative gearing
+                adjustedAnnualPrincipalPaid = (annualPrincipalPaid / 12) * monthsActive;
+                adjustedTotalActualExpensesExcludingDepreciation = (totalActualExpensesExcludingDepreciation / 12) * monthsActive;
             }
+
+
+            const netRentalLoss = adjustedAnnualRentalIncome - adjustedTotalDeductibleExpenses;
+
+            // Update UI
+            document.getElementById(`annualRentalIncome${propertyId}`).textContent = formatCurrency(annualRentalIncome);
+            document.getElementById(`monthlyPI${propertyId}`).textContent = formatCurrency(monthlyPI);
+            document.getElementById(`annualPI${propertyId}`).textContent = formatCurrency(annualPI);
+            document.getElementById(`deductibleInterest${propertyId}`).textContent = formatCurrency(deductibleInterest);
+            document.getElementById(`annualPrincipalPaid${propertyId}`).textContent = formatCurrency(annualPrincipalPaid);
+
+            // Update results card
+            document.getElementById(`resWeeklyRent${propertyId}`).textContent = formatCurrency(weeklyRent);
+            document.getElementById(`resAnnualRentalIncome${propertyId}`).textContent = formatCurrency(adjustedAnnualRentalIncome);
+            document.getElementById(`resLoanAmount${propertyId}`).textContent = formatCurrency(loanAmount);
+            document.getElementById(`resInterestRate${propertyId}`).textContent = `${interestRate}%`;
+            document.getElementById(`resTotalExpenses${propertyId}`).textContent = formatCurrency(adjustedTotalDeductibleExpenses); // This includes interest
+
+            const resNetRentalLossEl = document.getElementById(`resNetRentalLoss${propertyId}`);
+            resNetRentalLossEl.innerHTML = `<span>Net Rental Income/Loss:</span><span class="${netRentalLoss < 0 ? 'text-negative' : 'text-positive'} font-bold text-lg">${formatCurrency(netRentalLoss)}</span>`;
+
+            const resNegativeGearingTextEl = document.getElementById(`resNegativeGearingText${propertyId}`);
+            const resTaxBenefitEl = document.getElementById(`resTaxBenefit${propertyId}`);
+            const taxBenefitAmountEl = document.getElementById(`taxBenefitAmount${propertyId}`);
+
+            // Get all inputs for this property card to manage their disabled state
+            const propertyCardInputs = document.querySelectorAll(`#propertyCard${propertyId} input[type="text"], #propertyCard${propertyId} select, #propertyCard${propertyId} .add-expense-btn, #propertyCard${propertyId} .remove-expense-btn`);
+
+            if (isPPR) {
+                // If PPR, expenses are not deductible for negative gearing purposes
+                resNetRentalLossEl.innerHTML = `<span>Net Rental Income/Loss:</span><span class="text-neutral font-bold text-lg">${formatCurrency(annualRentalIncome - (totalFixedExpenses + annualPrincipalPaid))}</span>`; // Show actual cash flow if PPR
+                resNegativeGearingTextEl.className = "text-center text-gray-600 text-base mt-3";
+                resNegativeGearingTextEl.textContent = "This is marked as Principal Place of Residence (PPR). Expenses are generally not tax deductible for negative gearing.";
+                resTaxBenefitEl.classList.add('hidden');
+                document.getElementById(`propertyCard${propertyId}`).classList.add('ppr-disabled-section');
+                document.getElementById(`propertyResults${propertyId}`).classList.add('ppr-disabled-section');
+                
+                propertyCardInputs.forEach(input => {
+                    input.classList.add('disabled-input');
+                    input.disabled = true;
+                });
+                // Re-enable PPR checkbox itself
+                document.getElementById(`isPPR${propertyId}`).disabled = false;
+            } else {
+                document.getElementById(`propertyCard${propertyId}`).classList.remove('ppr-disabled-section');
+                document.getElementById(`propertyResults${propertyId}`).classList.remove('ppr-disabled-section');
+                
+                propertyCardInputs.forEach(input => {
+                    input.classList.remove('disabled-input');
+                    input.disabled = false;
+                });
+                // Re-enable PPR checkbox itself
+                document.getElementById(`isPPR${propertyId}`).disabled = false;
+
+                if (netRentalLoss < 0) {
+                    resNegativeGearingTextEl.className = "text-center text-purple-600 text-base mt-3";
+                    resNegativeGearingTextEl.textContent = `This property is negatively geared with a deduction of ${formatCurrency(Math.abs(netRentalLoss))}.`;
+                    resTaxBenefitEl.classList.remove('hidden');
+                    taxBenefitAmountEl.textContent = formatCurrency(Math.abs(netRentalLoss) * calculateMarginalTaxRate(parseNumber(document.getElementById('userIncome').value)));
+                } else {
+                    resNegativeGearingTextEl.className = "text-center text-green-600 text-base mt-3";
+                    resNegativeGearingTextEl.textContent = "This property is positively geared.";
+                    resTaxBenefitEl.classList.add('hidden');
+                }
+            }
+
+            // Handle sold property styling and input disabling
+            const propertyCardEl = document.getElementById(`propertyCard${propertyId}`);
+            const soldMonthSelect = document.getElementById(`soldMonth${propertyId}`);
+            if (isSold) {
+                propertyCardEl.classList.add('sold-property-section');
+                document.getElementById(`propertyResults${propertyId}`).classList.add('sold-property-section');
+                if (soldMonthSelect) soldMonthSelect.disabled = false;
+            } else {
+                propertyCardEl.classList.remove('sold-property-section');
+                document.getElementById(`propertyResults${propertyId}`).classList.remove('sold-property-section');
+                if (soldMonthSelect) soldMonthSelect.disabled = true;
+            }
+            
+            return {
+                propertyId,
+                isPPR,
+                isSold,
+                monthsActive,
+                weeklyRent,
+                annualRentalIncome, // Current year income (pre-adjusted for sold)
+                loanAmount,
+                interestRate,
+                propertyValue, // Added property value
+                landValuePercentage, // Added land value percentage
+                landValue, // Calculated land value
+                monthlyPI,
+                annualPI,
+                deductibleInterest, // Current year interest (pre-adjusted for sold)
+                annualPrincipalPaid, // Current year principal (pre-adjusted for sold)
+                totalFixedExpenses, // Total fixed expenses for the property (pre-adjusted for sold)
+                totalDeductibleExpenses: adjustedTotalDeductibleExpenses, // Adjusted for sold property and includes interest
+                netRentalLoss: netRentalLoss, // Adjusted for sold property
+                loanAmortization, // Full 5-year amortization schedule
+                totalActualExpensesExcludingDepreciation: totalActualExpensesExcludingDepreciation // Pre-adjusted for sold
+            };
         };
 
         // Function to populate the cash flow table
@@ -1439,39 +1310,38 @@
 
             for (let year = 0; year < 5; year++) {
                 let totalRentalIncomeYear = 0;
-                let totalDeductibleExpensesYear = 0;
+                let totalDeductibleExpensesYear = 0; // For tax calculation
                 let totalPrincipalRepaymentsYear = 0;
-                let totalActualExpensesExcludingDepreciationYear = 0;
+                let totalActualExpensesExcludingDepreciationYear = 0; // For overall cash flow calculation
 
                 propertiesData.forEach(prop => {
-                    if (!prop) return;
+                    if (!prop) return; // Skip if property data is null
 
                     let currentAnnualRentalIncome = prop.annualRentalIncome * Math.pow(1 + rentalGrowthRate / 100, year);
                     let currentTotalFixedExpenses = prop.totalFixedExpenses * Math.pow(1 + expenseInflationRate / 100, year);
                     let currentTotalActualExpensesExcludingDepreciation = prop.totalActualExpensesExcludingDepreciation * Math.pow(1 + expenseInflationRate / 100, year);
                     
                     // Get interest and principal for the specific year from amortization schedule
-                    const yearAmortization = prop.loanAmortization[year] || { annualInterest: 0, annualPrincipal: 0 };
-                    const annualInterestThisYear = yearAmortization.annualInterest;
-                    const annualPrincipalThisYear = yearAmortization.annualPrincipal;
+                    const annualInterestThisYear = (prop.loanAmortization[year] && prop.loanAmortization[year].annualInterest) ? prop.loanAmortization[year].annualInterest : 0;
+                    const annualPrincipalThisYear = (prop.loanAmortization[year] && prop.loanAmortization[year].annualPrincipal) ? prop.loanAmortization[year].annualPrincipal : 0;
 
                     let currentTotalDeductibleExpensesForTax = currentTotalFixedExpenses + annualInterestThisYear;
 
-                    // Apply adjustments for sold property in Year 1
+                    // For Year 1, apply 'sold' property adjustment if applicable
                     if (year === 0 && prop.isSold) {
-                        const fraction = prop.monthsActive / 12;
-                        currentAnnualRentalIncome *= fraction;
-                        currentTotalFixedExpenses *= fraction;
-                        currentTotalDeductibleExpensesForTax *= fraction;
-                        currentTotalActualExpensesExcludingDepreciation *= fraction;
+                        currentAnnualRentalIncome = (prop.annualRentalIncome / 12) * prop.monthsActive;
+                        currentTotalFixedExpenses = (prop.totalFixedExpenses / 12) * prop.monthsActive;
+                        const adjustedAnnualInterestThisYear = (annualInterestThisYear / 12) * prop.monthsActive;
+                        currentTotalDeductibleExpensesForTax = currentTotalFixedExpenses + adjustedAnnualInterestThisYear;
+                        currentTotalActualExpensesExcludingDepreciation = (prop.totalActualExpensesExcludingDepreciation / 12) * prop.monthsActive;
                     }
 
-                    // Only include non-PPR properties in tax calculations
+                    // Only include income/expenses for tax calculation if not PPR
                     if (!prop.isPPR) {
                         totalRentalIncomeYear += currentAnnualRentalIncome;
                         totalDeductibleExpensesYear += currentTotalDeductibleExpensesForTax;
                     }
-                    
+                    // Principal repayments and cash expenses are always part of cash flow, regardless of PPR status
                     totalPrincipalRepaymentsYear += annualPrincipalThisYear;
                     totalActualExpensesExcludingDepreciationYear += currentTotalActualExpensesExcludingDepreciation;
                 });
@@ -1491,7 +1361,7 @@
                 row.insertCell().textContent = formatCurrency(totalPrincipalRepaymentsYear);
                 row.insertCell().textContent = formatCurrency(overallCashFlow);
 
-                // Apply color coding
+                // Apply color coding to Net Rental Income/Loss and Overall Cash Flow
                 row.cells[3].classList.add(netRentalIncomeLossYear < 0 ? 'text-negative' : 'text-positive', 'font-semibold');
                 row.cells[7].classList.add(overallCashFlow < 0 ? 'text-negative' : 'text-positive', 'font-semibold');
                 row.cells[1].classList.add('text-green-600');
@@ -1500,62 +1370,8 @@
             }
         };
 
-        // Function to create result card for a property
-        const createResultCard = (propertyData) => {
-            if (!propertyData) return '';
-            
-            const { 
-                propertyId, 
-                weeklyRent, 
-                annualRentalIncome, 
-                loanAmount, 
-                interestRate, 
-                totalFixedExpenses, 
-                netRentalIncomeLoss,
-                deductibleInterest
-            } = propertyData;
-            
-            const propertyName = document.querySelector(`#propertyCard${propertyId} h2`)?.textContent || `Property ${propertyId}`;
-            
-            return `
-                <div id="propertyResults${propertyId}" class="result-card p-5 rounded-xl shadow-sm">
-                    <h3 class="text-lg font-bold text-green-800 mb-3 text-center">${propertyName}</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-medium">Weekly Rent:</span>
-                            <span class="font-semibold text-lg">${formatCurrency(weeklyRent)}</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-medium">Annual Rental Income:</span>
-                            <span class="text-green-600 font-semibold text-lg">${formatCurrency(annualRentalIncome)}</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-medium">Loan Amount:</span>
-                            <span class="font-semibold text-lg">${formatCurrency(loanAmount)}</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-medium">Interest Rate:</span>
-                            <span class="font-semibold text-lg">${formatPercentage(interestRate)}</span>
-                        </div>
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <span class="font-medium">Total Expenses:</span>
-                            <span class="text-red-600 font-semibold text-lg">${formatCurrency(totalFixedExpenses + deductibleInterest)}</span>
-                        </div>
-                        <div class="flex justify-between items-center pt-3">
-                            <span>Net Rental Income/Loss:</span>
-                            <span class="${netRentalIncomeLoss < 0 ? 'text-negative' : 'text-positive'} font-bold text-lg">
-                                ${formatCurrency(netRentalIncomeLoss)}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        };
-
         // Main calculation function
         const calculateAll = () => {
-            showLoading();
-            
             try {
                 // Get global growth and inflation rates
                 const rentalGrowthRate = parseNumber(document.getElementById('rentalGrowthRate').value);
@@ -1617,7 +1433,7 @@
                 const calculatedTaxRate = calculateMarginalTaxRate(userIncome);
                 document.getElementById('calculatedTaxRate').textContent = `${(calculatedTaxRate * 100).toFixed(2)}%`;
 
-                // Re-render expenses for all properties
+                // Re-render expenses for all properties to ensure agent fees and land tax are updated based on latest rent/property value
                 Object.keys(currentExpenses).forEach(propId => renderExpenses(propId));
 
                 // Calculate properties
@@ -1638,20 +1454,11 @@
                     if (prop2Data) propertiesData.push(prop2Data);
                 }
 
-                // Update results grid
-                const resultsGrid = document.querySelector('.results-grid');
-                resultsGrid.innerHTML = '';
-                propertiesData.forEach(prop => {
-                    if (prop) {
-                        resultsGrid.innerHTML += createResultCard(prop);
-                    }
-                });
-
                 // Update overall summary
                 const propertiesForGearingSummary = propertiesData.filter(p => p && !p.isPPR);
                 const overallTotalIncome = propertiesForGearingSummary.reduce((sum, p) => sum + p.annualRentalIncome, 0);
-                const overallTotalExpenses = propertiesForGearingSummary.reduce((sum, p) => sum + p.totalFixedExpenses + p.deductibleInterest, 0);
-                const overallNetRentalLoss = propertiesForGearingSummary.reduce((sum, p) => sum + p.netRentalIncomeLoss, 0);
+                const overallTotalExpenses = propertiesForGearingSummary.reduce((sum, p) => sum + p.totalDeductibleExpenses, 0);
+                const overallNetRentalLoss = propertiesForGearingSummary.reduce((sum, p) => sum + p.netRentalLoss, 0);
                 const totalAnnualPrincipalPaid = propertiesData.reduce((sum, p) => sum + (p?.annualPrincipalPaid || 0), 0);
                 const potentialTaxBenefit = overallNetRentalLoss < 0 ? Math.abs(overallNetRentalLoss) * calculatedTaxRate : 0;
 
@@ -1690,11 +1497,13 @@
                 let totalPrincipalPayments = 0;
 
                 propertiesData.forEach(p => {
-                    if (!p) return;
+                    if (!p) return; // Skip if property data is null
 
+                    // For cash flow, we consider all rents and principal payments regardless of PPR status
                     totalAllRents += p.annualRentalIncome;
                     totalPrincipalPayments += p.annualPrincipalPaid;
 
+                    // Interest and other actual expenses (excluding depreciation) are considered for non-PPR properties for the user's specific cash flow definition
                     if (!p.isPPR) {
                         totalInterestExpenses += p.deductibleInterest;
                         totalActualExpensesExcludingDepreciation += p.totalActualExpensesExcludingDepreciation;
@@ -1706,12 +1515,11 @@
                 document.getElementById('overallEndOfYearCashFlow').classList.remove('text-negative', 'text-positive');
                 document.getElementById('overallEndOfYearCashFlow').classList.add(overallEndOfYearCashFlow < 0 ? 'text-negative' : 'text-positive');
 
+
                 populateCashFlowTable(propertiesData, userIncome, rentalGrowthRate, expenseInflationRate);
 
             } catch (error) {
                 console.error("An error occurred during calculation:", error);
-            } finally {
-                hideLoading();
             }
         };
 
@@ -1720,6 +1528,7 @@
             const dataToSave = {};
             // Save general inputs
             document.querySelectorAll('input[type="text"], input[type="checkbox"], select').forEach(input => {
+                // Only save inputs that are not part of the dynamic expense list
                 if (!input.closest('.expense-item')) {
                     if (input.type === 'checkbox') {
                         dataToSave[input.id] = input.checked;
@@ -1729,7 +1538,7 @@
                 }
             });
 
-            // Save currentExpenses
+            // Save currentExpenses (which includes all default and custom expenses with their current values)
             dataToSave['currentExpenses'] = currentExpenses;
 
             localStorage.setItem('propertyCalculatorData', JSON.stringify(dataToSave));
@@ -1742,13 +1551,15 @@
             if (savedData) {
                 const data = JSON.parse(savedData);
                 
-                // Reset to default first
+                // Reset to default first to clear any existing custom fields and ensure default structure
                 resetAllFields();
 
-                // Load data
+                // Load general inputs (excluding expenses, which are handled by currentExpenses)
                 for (const id in data) {
                     if (id === 'currentExpenses') {
+                        // Load expenses data into currentExpenses object
                         currentExpenses = data[id];
+                        // Re-render expenses for all properties based on loaded data
                         Object.keys(currentExpenses).forEach(propId => renderExpenses(propId));
                     } else {
                         const input = document.getElementById(id);
@@ -1761,7 +1572,7 @@
                         }
                     }
                 }
-                calculateAll();
+                calculateAll(); // Recalculate after loading data
                 alert('Calculation loaded successfully!');
             } else {
                 alert('No saved calculation found.');
@@ -1770,56 +1581,55 @@
 
         // Function to reset all fields to their default values
         const resetAllFields = () => {
-            // Reset general inputs
+            // Reset general inputs (excluding expense inputs)
             document.querySelectorAll('input[type="text"]:not([data-is-depreciation]):not([data-is-land-tax]):not([data-expense-name])').forEach(input => {
                 input.value = input.defaultValue;
             });
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = checkbox.defaultChecked;
-                checkbox.disabled = false;
+                checkbox.checked = checkbox.defaultChecked; // Reset to initial HTML checked state
+                checkbox.disabled = false; // Re-enable all checkboxes
             });
             document.querySelectorAll('select').forEach(select => {
-                select.selectedIndex = 0;
-                select.disabled = false;
+                select.selectedIndex = 0; // Reset to first option
+                select.disabled = false; // Re-enable all selects
             });
             
-            // Reset expenses
+            // Reset currentExpenses to default and re-render all expense sections
             currentExpenses = JSON.parse(JSON.stringify(defaultExpenses));
             Object.keys(currentExpenses).forEach(propId => renderExpenses(propId));
 
-            calculateAll();
+            calculateAll(); // Recalculate after reset
         };
 
         // Initialize calculator on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial render of expenses
+            // Initial render of default expenses for all properties
             Object.keys(currentExpenses).forEach(propId => renderExpenses(propId));
 
-            // Event listeners
+            // Event listeners for all relevant inputs
             document.querySelectorAll('input[type="text"], input[type="checkbox"], select').forEach(input => {
                 input.addEventListener('input', calculateAll);
-                input.addEventListener('change', calculateAll);
+                input.addEventListener('change', calculateAll); // For select and checkboxes
             });
 
-            // Property-specific event listeners
-            ['1', '2', '2a', '2b', '3'].forEach(id => {
-                const pprCheckbox = document.getElementById(`isPPR${id}`);
-                if (pprCheckbox) {
-                    pprCheckbox.addEventListener('change', calculateAll);
-                }
-            });
+            // Specific event listeners for checkboxes that control section visibility/disabling
+            document.getElementById('isPPR1').addEventListener('change', calculateAll);
+            document.getElementById('isPPR2').addEventListener('change', calculateAll);
+            document.getElementById('isPPR2a').addEventListener('change', calculateAll);
+            document.getElementById('isPPR2b').addEventListener('change', calculateAll);
+            document.getElementById('isPPR3').addEventListener('change', calculateAll);
 
             document.getElementById('isSold3').addEventListener('change', calculateAll);
             document.getElementById('soldMonth3').addEventListener('change', calculateAll);
+
             document.getElementById('isSubdivided2').addEventListener('change', calculateAll);
 
-            // Button event listeners
             document.getElementById('resetButton').addEventListener('click', resetAllFields);
             document.getElementById('saveButton').addEventListener('click', saveCalculation);
             document.getElementById('loadButton').addEventListener('click', loadCalculation);
-            document.getElementById('calculateTaxBenefitButton').addEventListener('click', calculateAll);
+            document.getElementById('calculateTaxBenefitButton').addEventListener('click', calculateAll); // Ensure this also triggers full recalculation
 
-            // Add expense buttons
+            // Add event listeners for "Add Custom Expense" buttons
             document.querySelectorAll('.add-expense-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const propertyId = event.target.dataset.propertyId;
